@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/styles.css">
+    <script src="/static/js/main.js"></script>
+    <link rel="icon" type="image/x-icon" href="/static/img/favicon.ico">
+    <title>Sudoku</title>
+</head>
+<body>
+    <div id="main">
+        <div id="sudoku">
+            <div class="row">
+                <table><tr><th><{{ edit0[0] }}>{{ name[0] }}</{{ edit1[0] }}></th><th>{{ name[1] }}</th><th>{{ name[2] }}</th></tr><tr><th>{{ name[9] }}</th><th>{{ name[10] }}</th><th>{{ name[11] }}</th></tr><tr><th>{{ name[18] }}</th><th>{{ name[19] }}</th><th>{{ name[20] }}</th></tr></table>
+                <table><tr><th>{{ name[3] }}</th><th>{{ name[4] }}</th><th>{{ name[5] }}</th></tr><tr><th>{{ name[12] }}</th><th>{{ name[13] }}</th><th>{{ name[14] }}</th></tr><tr><th>{{ name[21] }}</th><th>{{ name[22] }}</th><th>{{ name[23] }}</th></tr></table>
+                <table><tr><th>{{ name[6] }}</th><th>{{ name[7] }}</th><th>{{ name[8] }}</th></tr><tr><th>{{ name[15] }}</th><th>{{ name[16] }}</th><th>{{ name[17] }}</th></tr><tr><th>{{ name[24] }}</th><th>{{ name[25] }}</th><th>{{ name[26] }}</th></tr></table>
+            </div>
+            <div class="row">
+                <table><tr><th>{{ name[27] }}</th><th>{{ name[28] }}</th><th>{{ name[29] }}</th></tr><tr><th>{{ name[36] }}</th><th>{{ name[37] }}</th><th>{{ name[38] }}</th></tr><tr><th>{{ name[45] }}</th><th>{{ name[46] }}</th><th>{{ name[47] }}</th></tr></table>
+                <table><tr><th>{{ name[30] }}</th><th>{{ name[31] }}</th><th>{{ name[32] }}</th></tr><tr><th>{{ name[39] }}</th><th>{{ name[40] }}</th><th>{{ name[41] }}</th></tr><tr><th>{{ name[48] }}</th><th>{{ name[49] }}</th><th>{{ name[50] }}</th></tr></table>
+                <table><tr><th>{{ name[33] }}</th><th>{{ name[34] }}</th><th>{{ name[35] }}</th></tr><tr><th>{{ name[42] }}</th><th>{{ name[43] }}</th><th>{{ name[44] }}</th></tr><tr><th>{{ name[51] }}</th><th>{{ name[52] }}</th><th>{{ name[53] }}</th></tr></table>
+            </div>
+            <div class="row">
+                <table><tr><th>{{ name[54] }}</th><th>{{ name[55] }}</th><th>{{ name[56] }}</th></tr><tr><th>{{ name[63] }}</th><th>{{ name[64] }}</th><th>{{ name[65] }}</th></tr><tr><th>{{ name[72] }}</th><th>{{ name[73] }}</th><th>{{ name[74] }}</th></tr></table>
+                <table><tr><th>{{ name[57] }}</th><th>{{ name[58] }}</th><th>{{ name[59] }}</th></tr><tr><th>{{ name[66] }}</th><th>{{ name[67] }}</th><th>{{ name[68] }}</th></tr><tr><th>{{ name[75] }}</th><th>{{ name[76] }}</th><th>{{ name[77] }}</th></tr></table>
+                <table><tr><th>{{ name[60] }}</th><th>{{ name[61] }}</th><th>{{ name[62] }}</th></tr><tr><th>{{ name[69] }}</th><th>{{ name[70] }}</th><th>{{ name[71] }}</th></tr><tr><th>{{ name[78] }}</th><th>{{ name[79] }}</th><th>{{ name[80] }}</th></tr></table>
+            </div>
+        </div>
+
+            
+        <form method=post id="generate">
+            <input type="submit" name="easy" value="Easy" onclick=loading()>
+            <input type="submit" name="medium" value="Medium" onclick=loading()>
+            <input type="submit" name="hard" value="Hard" onclick=loading()>
+        </form>
+    </div>
+
+</body>
+</html>
