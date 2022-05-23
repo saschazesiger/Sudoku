@@ -13,9 +13,12 @@ app.secret_key = "123Heinrich"
 
 @app.route('/', methods=['GET', 'POST'])
 def html():
+
     sudoku = []
     edit0 = []
     edit1 = []
+    id = ""
+    count = 0
     if request.method == 'POST':
         if 'easy' in request.form:
             s = main("Easy")
@@ -26,6 +29,7 @@ def html():
                     sudoku.append(i)
                 edit0.append("b")
                 edit1.append("b")
+                id = id + str(i)
         elif 'medium' in request.form:
             s = main("Medium")
             for i in s:
@@ -35,6 +39,7 @@ def html():
                     sudoku.append(i)
                 edit0.append("b")
                 edit1.append("b")
+                id = id + str(i)
         elif 'hard' in request.form:
             s = main("Hard")
             for i in s:
@@ -44,9 +49,22 @@ def html():
                     sudoku.append(i)
                 edit0.append("b")
                 edit1.append("b")
-        return render_template("index.html", name=sudoku, edit0=edit0, edit1=edit1)
+                id = id + str(i)
+        elif 'online' in request.form:
+            id = request.form.get('id')
+            for i in id:
+                if i == "0":
+                    sudoku.append(" ")
+                    edit0.append(f"input type=number maxlength=1 name={count}")
+                    edit1.append('input')
+                else:
+                    sudoku.append(i) 
+                    edit0.append("b")
+                    edit1.append("b") 
+                count = count + 1
+        return render_template("index.html", name=sudoku, edit0=edit0, edit1=edit1, id=id)
     else:
-        return render_template("index.html", name=sudoku, edit0=edit0, edit1=edit1)
+        return render_template("index.html", name=sudoku, edit0=edit0, edit1=edit1, id=id)
 
 
 class cell():
@@ -66,24 +84,31 @@ class cell():
             self.answer = 0
 
     def solvedMethod(self):
+        """ Returns whether or not a cell has been solved"""
         return self.solved
 
     def checkPosition(self):
+        """ Returns the position of a cell within a sudoku puzzle. x = row; y = col; z = box number"""
         return self.position
 
     def returnPossible(self):
+        """ Returns a list of possible answers that a cell can still use"""
         return self.possibleAnswers
 
     def lenOfPossible(self):
+        """ Returns an integer of the length of the possible answers list"""
         return len(self.possibleAnswers)
 
     def returnSolved(self):
+        """ Returns whether or not a cell has been solved"""
         if self.solved == True:
             return self.possibleAnswers[0]
         else:
             return 0
         
     def setAnswer(self, num):
+        """ Sets an answer of a puzzle and sets a cell's solved method to true. This
+            method also eliminates all other possible numbers"""
         if num in [1,2,3,4,5,6,7,8,9]:
             self.solved = True
             self.answer = num
@@ -92,11 +117,14 @@ class cell():
             raise(ValueError)
        
     def reset(self):
+        """ Resets all attributes of a cell to the original conditions""" 
         self.possibleAnswers = [1,2,3,4,5,6,7,8,9]
         self.answer = None
         self.solved = False
 
 def emptySudoku():
+    ''' Creates an empty sudoku in row major form. Sets up all of the x, y, and z
+        coordinates for the sudoku cells'''
     ans = []
     for x in range(1,10):
         if x in [7,8,9]:
@@ -127,26 +155,29 @@ def printSudoku(sudoku):
     return(row)
 
 def sudokuGen():
-    cells = [i for i in range(81)]
+    '''Generates a completed sudoku. Sudoku is completly random'''
+    cells = [i for i in range(81)] ## our cells is the positions of cells not currently set
     sudoku = emptySudoku()
     while len(cells) != 0:
         lowestNum = []
         Lowest = []
         for i in cells:
-            lowestNum.append(sudoku[i].lenOfPossible())
-        m = min(lowestNum)
+            lowestNum.append(sudoku[i].lenOfPossible())  ## finds all the lengths of of possible answers for each remaining cell
+        m = min(lowestNum)  ## finds the minimum of those
+        '''Puts all of the cells with the lowest number of possible answers in a list titled Lowest'''
         for i in cells:
             if sudoku[i].lenOfPossible() == m:
                 Lowest.append(sudoku[i])
+        '''Now we randomly choose a possible answer and set it to the cell'''
         choiceElement = random.choice(Lowest)
         choiceIndex = sudoku.index(choiceElement) 
         cells.remove(choiceIndex)                 
         position1 = choiceElement.checkPosition()
-        if choiceElement.solvedMethod() == False:
+        if choiceElement.solvedMethod() == False:  ##the actual setting of the cell
             possibleValues = choiceElement.returnPossible()
             finalValue = random.choice(possibleValues)
             choiceElement.setAnswer(finalValue)
-            for i in cells:
+            for i in cells:  ##now we iterate through the remaining unset cells and remove the input if it's in the same row, col, or box
                 position2 = sudoku[i].checkPosition()
                 if position1[0] == position2[0]:
                     sudoku[i].remove(finalValue)
@@ -157,7 +188,7 @@ def sudokuGen():
 
         else:
             finalValue = choiceElement.returnSolved()
-            for i in cells:
+            for i in cells:  ##now we iterate through the remaining unset cells and remove the input if it's in the same row, col, or box
                 position2 = sudoku[i].checkPosition()
                 if position1[0] == position2[0]:
                     sudoku[i].remove(finalValue)
@@ -168,6 +199,8 @@ def sudokuGen():
     return sudoku
 
 def sudokuChecker(sudoku):
+    """ Checks to see if an input a completed sudoku puzzle is of the correct format and abides by all
+        of the rules of a sudoku puzzle. Returns True if the puzzle is correct. False if otherwise"""
     for i in range(len(sudoku)):
         for n in range(len(sudoku)):
             if i != n:
@@ -193,7 +226,7 @@ def solver(sudoku, f = 0):
         return False
     guesses = 0
     copy_s = copy.deepcopy(sudoku)
-    cells = [i for i in range(81)]
+    cells = [i for i in range(81)] ## our cells is the positions of cells not currently set
     solvedCells = []
     for i in cells:
         if copy_s[i].lenOfPossible() == 1:
@@ -203,7 +236,7 @@ def solver(sudoku, f = 0):
             cell = copy_s[n]
             position1 = cell.checkPosition()
             finalValue = copy_s[n].returnSolved()
-            for i in cells:
+            for i in cells:  ##now we itterate through the remaing unset cells and remove the input if it's in the same row, col, or box
                 position2 = copy_s[i].checkPosition()
                 if position1[0] == position2[0]:
                     copy_s[i].remove(finalValue)
@@ -213,6 +246,7 @@ def solver(sudoku, f = 0):
                     copy_s[i].remove(finalValue)
                 if copy_s[i].lenOfPossible() == 1 and i not in solvedCells and i in cells:
                     solvedCells.append(i)
+                ##print(n)
             solvedCells.remove(n)
             cells.remove(n)
         if cells != [] and solvedCells == []:
@@ -254,6 +288,7 @@ def solve(sudoku, n = 0):
         return False
     
 def puzzleGen(sudoku):
+    """ Generates a puzzle with a unique solution. """
     cells = [i for i in range(81)]
     while cells != []:
         copy_s = copy.deepcopy(sudoku)
@@ -271,15 +306,21 @@ def puzzleGen(sudoku):
                 sudoku[randIndex].reset()
         else:
             f = solve(sudoku)
+##            print("Guesses: " + str(f[1]))
+##            print("Level: " + str(f[2]))
             return sudoku, f[1], f[2]
 
 def equalChecker(s1,s2):
+    """ Checks to see if two puzzles are the same"""
     for i in range(len(s1)):
         if s1[i].returnSolved() != s2[i].returnSolved():
             return False
     return True
 
 def main(level):
+    """ Input the level of difficulty of the sudoku puzzle. Difficulty levels
+        include ‘Easy’ ‘Medium’ ‘Hard’ and ‘Insane’. Outputs a sudoku of desired
+        difficulty."""
     t1 = time.time()
     n = 0
     if level == 'Easy':
@@ -338,4 +379,4 @@ def main(level):
 
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
