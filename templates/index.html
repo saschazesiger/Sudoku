@@ -37,18 +37,20 @@
             <input type="submit" name="hard" value="Hard" onclick=loading()>
 
         </form>
-        {% if name %}
+        
         <form method=post id="getid">
             <p>ID from generated Sudoku:</p>
             <input type="text" id="id" name="id" value="{{ id }}" readonly>
+            {% if name %}
             <br>
             <div>   
                 <p>Use it:</p>
                 <input type="submit" class="idbutton" name="online" value="Online" onclick=loading()>
                 <input type="submit" class="idbutton" name="offline" value="Offline" onclick=loading()>
             </div> 
+            {% endif %}
         </form>
-        {% endif %}
+        
     </div>
 
 </body>
