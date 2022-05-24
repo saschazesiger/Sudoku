@@ -1,12 +1,11 @@
 import os
-from flask import Flask, flash, request, redirect, url_for, render_template
+from flask import Flask, flash, make_response, request, redirect, url_for, render_template
 from numpy import diff
 from werkzeug.utils import secure_filename
 from requests import get
 import time
 import copy
 import random
-
 
 app = Flask(__name__)
 app.secret_key = "123Heinrich"
@@ -32,6 +31,8 @@ def html():
                 edit0.append("b")
                 edit1.append("b")
                 id = id + str(i)
+            link = request.url_root + "?id=" + id
+            return render_template("index.html", name=sudoku, edit0=edit0, edit1=edit1, id=id, link=link)
         elif 'medium' in request.form:
             s = main("Medium")
             for i in s:
@@ -42,6 +43,8 @@ def html():
                 edit0.append("b")
                 edit1.append("b")
                 id = id + str(i)
+            link = request.url_root + "?id=" + id
+            return render_template("index.html", name=sudoku, edit0=edit0, edit1=edit1, id=id, link=link)
         elif 'hard' in request.form:
             s = main("Hard")
             for i in s:
@@ -52,6 +55,8 @@ def html():
                 edit0.append("b")
                 edit1.append("b")
                 id = id + str(i)
+            link = request.url_root + "?id=" + id
+            return render_template("index.html", name=sudoku, edit0=edit0, edit1=edit1, id=id, link=link)
         elif 'online' in request.form:
             id = request.form.get('id')
             for i in id:
@@ -64,8 +69,19 @@ def html():
                     edit0.append("b")
                     edit1.append("b") 
                 count = count + 1
-        link = request.url_root + "?id=" + id
-        return render_template("index.html", name=sudoku, edit0=edit0, edit1=edit1, id=id, link=link)
+            link = request.url_root + "?id=" + id
+            return render_template("index.html", name=sudoku, edit0=edit0, edit1=edit1, id=id, link=link)
+        elif 'offline' in request.form:
+            id = request.form.get('id')
+            for i in id:
+                if i == "0":
+                    sudoku.append(" ")
+                else:
+                    sudoku.append(i) 
+                edit0.append("b")
+                edit1.append("b")
+            return render_template("print.html", name=sudoku, edit0=edit0, edit1=edit1)
+
     else:
         if request.args.get('id') != None:
             id = ""
