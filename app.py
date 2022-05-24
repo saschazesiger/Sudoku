@@ -11,11 +11,13 @@ import random
 app = Flask(__name__)
 app.secret_key = "123Heinrich"
 
+
 @app.route('/', methods=['GET', 'POST'])
 def html():
     sudoku = []
     edit0 = []
     edit1 = []
+    link = "Not generated jet..."
     id = "Not generated jet..."
     count = 0
     if request.method == 'POST':
@@ -62,9 +64,22 @@ def html():
                     edit0.append("b")
                     edit1.append("b") 
                 count = count + 1
-        return render_template("index.html", name=sudoku, edit0=edit0, edit1=edit1, id=id)
+        link = request.url_root + "?id=" + id
+        return render_template("index.html", name=sudoku, edit0=edit0, edit1=edit1, id=id, link=link)
     else:
-        return render_template("index.html", name=sudoku, edit0=edit0, edit1=edit1, id=id)
+        if request.args.get('id') != None:
+            id = ""
+            s = request.args.get('id')
+            for i in s:
+                if i == "0":
+                    sudoku.append(" ")
+                else:
+                    sudoku.append(i)
+                edit0.append("b")
+                edit1.append("b")
+                id = id + str(i)
+            link = request.url_root + "?id=" + id
+        return render_template("index.html", name=sudoku, edit0=edit0, edit1=edit1, id=id, link=link)
 
 
 class cell():
