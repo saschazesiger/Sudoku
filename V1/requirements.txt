@@ -1,5 +1,0 @@
-Flask
-numpy
-requests
-Werkzeug
-flask_weasyprint
