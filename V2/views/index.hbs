@@ -6,12 +6,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    
+
     <title>Sudoku</title>
 </head>
 
 <body>
-    <form class="container">
+    <div class="container">
         <h1>SUDOKU</h1>
         <div id="d-difficulty">
             <input type="radio" class="difficulty" name="difficulty" value="0" id="d-0" hidden><label
@@ -25,36 +25,198 @@
         </div>
         <button type="button" id="b-start" class="b-start">Start!</button>
         <div id="b-loader" class="buttonloader" title="7" hidden>
-                <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
-                    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="18px" height="20px"
-                    viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve">
-                    <rect x="0" y="10" width="4" height="10" fill="#777" opacity="0.2">
-                        <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="0.6s"
-                            repeatCount="indefinite" />
-                        <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0s" dur="0.6s"
-                            repeatCount="indefinite" />
-                        <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="0.6s"
-                            repeatCount="indefinite" />
-                    </rect>
-                    <rect x="8" y="10" width="4" height="10" fill="#777" opacity="0.2">
-                        <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.15s"
-                            dur="0.6s" repeatCount="indefinite" />
-                        <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.15s" dur="0.6s"
-                            repeatCount="indefinite" />
-                        <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.15s" dur="0.6s"
-                            repeatCount="indefinite" />
-                    </rect>
-                    <rect x="16" y="10" width="4" height="10" fill="#777" opacity="0.2">
-                        <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.3s" dur="0.6s"
-                            repeatCount="indefinite" />
-                        <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.3s" dur="0.6s"
-                            repeatCount="indefinite" />
-                        <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.3s" dur="0.6s"
-                            repeatCount="indefinite" />
-                    </rect>
-                </svg>
+            <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="18px" height="20px"
+                viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                <rect x="0" y="10" width="4" height="10" fill="#777" opacity="0.2">
+                    <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="0.6s"
+                        repeatCount="indefinite" />
+                    <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0s" dur="0.6s"
+                        repeatCount="indefinite" />
+                    <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0s" dur="0.6s"
+                        repeatCount="indefinite" />
+                </rect>
+                <rect x="8" y="10" width="4" height="10" fill="#777" opacity="0.2">
+                    <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.15s" dur="0.6s"
+                        repeatCount="indefinite" />
+                    <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.15s" dur="0.6s"
+                        repeatCount="indefinite" />
+                    <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.15s" dur="0.6s"
+                        repeatCount="indefinite" />
+                </rect>
+                <rect x="16" y="10" width="4" height="10" fill="#777" opacity="0.2">
+                    <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0.3s" dur="0.6s"
+                        repeatCount="indefinite" />
+                    <animate attributeName="height" attributeType="XML" values="10; 20; 10" begin="0.3s" dur="0.6s"
+                        repeatCount="indefinite" />
+                    <animate attributeName="y" attributeType="XML" values="10; 5; 10" begin="0.3s" dur="0.6s"
+                        repeatCount="indefinite" />
+                </rect>
+            </svg>
+        </div>
+        <div id="playground" hidden>
+            <div class="bigrow">
+                <div class="panel">
+                    <div class="row">
+                        <div class="field" id="0"></div>
+                        <div class="field" id="1"></div>
+                        <div class="field" id="2"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="27"></div>
+                        <div class="field" id="28"></div>
+                        <div class="field" id="29"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="54"></div>
+                        <div class="field" id="55"></div>
+                        <div class="field" id="56"></div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="row">
+                        <div class="field" id="3"></div>
+                        <div class="field" id="4"></div>
+                        <div class="field" id="5"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="30"></div>
+                        <div class="field" id="31"></div>
+                        <div class="field" id="32"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="57"></div>
+                        <div class="field" id="58"></div>
+                        <div class="field" id="59"></div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="row">
+                        <div class="field" id="6"></div>
+                        <div class="field" id="7"></div>
+                        <div class="field" id="8"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="33"></div>
+                        <div class="field" id="34"></div>
+                        <div class="field" id="35"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="60"></div>
+                        <div class="field" id="61"></div>
+                        <div class="field" id="62"></div>
+                    </div>
+                </div>
             </div>
-    </form>
+            <div class="bigrow">
+                <div class="panel">
+                    <div class="row">
+                        <div class="field" id="9"></div>
+                        <div class="field" id="10"></div>
+                        <div class="field" id="11"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="36"></div>
+                        <div class="field" id="37"></div>
+                        <div class="field" id="38"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="63"></div>
+                        <div class="field" id="64"></div>
+                        <div class="field" id="65"></div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="row">
+                        <div class="field" id="12"></div>
+                        <div class="field" id="13"></div>
+                        <div class="field" id="14"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="39"></div>
+                        <div class="field" id="40"></div>
+                        <div class="field" id="41"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="66"></div>
+                        <div class="field" id="67"></div>
+                        <div class="field" id="68"></div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="row">
+                        <div class="field" id="15"></div>
+                        <div class="field" id="16"></div>
+                        <div class="field" id="17"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="42"></div>
+                        <div class="field" id="43"></div>
+                        <div class="field" id="44"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="69"></div>
+                        <div class="field" id="70"></div>
+                        <div class="field" id="71"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bigrow">
+                <div class="panel">
+                    <div class="row">
+                        <div class="field" id="18"></div>
+                        <div class="field" id="19"></div>
+                        <div class="field" id="20"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="45"></div>
+                        <div class="field" id="46"></div>
+                        <div class="field" id="47"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="72"></div>
+                        <div class="field" id="73"></div>
+                        <div class="field" id="74"></div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="row">
+                        <div class="field" id="21"></div>
+                        <div class="field" id="22"></div>
+                        <div class="field" id="23"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="48"></div>
+                        <div class="field" id="49"></div>
+                        <div class="field" id="50"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="75"></div>
+                        <div class="field" id="76"></div>
+                        <div class="field" id="77"></div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="row">
+                        <div class="field" id="24"></div>
+                        <div class="field" id="25"></div>
+                        <div class="field" id="26"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="51"></div>
+                        <div class="field" id="52"></div>
+                        <div class="field" id="53"></div>
+                    </div>
+                    <div class="row">
+                        <div class="field" id="78"></div>
+                        <div class="field" id="79"></div>
+                        <div class="field" id="80"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 <script src="/js/index.js"></script>
+
 </html>

@@ -39,22 +39,25 @@ bstart.onclick = function startbutton(){
         difficulty.style.opacity = 0;
         difficulty.style.width = '0px';
         difficulty.style.height = '0px';
-        getSudoku(level);
-    };
-};
-
-function getSudoku(level){
-    http.open("POST", `/get`);
-    http.send();
-    http.onreadystatechange = function(){
-        if(this.readyState === 4){
-            if(this.status === 200){
-                console.log(http.responseText)
-            }else{
-                bstart.innerText = 'Try again'
-                bloader.style.display = 'none';
-                bstart.style.display = 'block';
+        http.open("POST", `/get`);
+        http.send();
+        http.onreadystatechange = function(){
+            if(this.readyState === 4){
+                if(this.status === 200){               
+                    const sudokupuzzle = JSON.parse(http.responseText).puzzle;
+                    for (let i = 0; i < sudokupuzzle.length; i++) {
+                        if(sudokupuzzle[i] != -1){
+                            document.getElementById(i).innerText = sudokupuzzle[i]
+                        };
+                        document.getElementById('playground').style.display = 'block';
+                        bloader.style.display = 'none';
+                    }
+                }else{
+                    bstart.innerText = 'Try again'
+                    bloader.style.display = 'none';
+                    bstart.style.display = 'block';
+                }
             }
-        }
+        };
     };
 };

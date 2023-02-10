@@ -6,6 +6,7 @@ body{
     flex-direction: column;
     justify-content: center;
     font-family: Arial, sans-serif;
+    text-align: center;
 }
 
 .container{
@@ -15,6 +16,7 @@ body{
     border-radius: 20px;
     text-align: center;
     padding: 20px;
+    align-items: center;
 }
 
 h1{
@@ -87,4 +89,21 @@ h1{
 #b-loader{
     margin-top: 30px;
     padding: 10px;
+}
+
+
+.bigrow{
+    display: flex;
+    flex-direction: row;
+}
+
+
+.row{
+    display: flex;
+    flex-direction: row;
+}
+
+.field{
+    height: 30px;
+    width: 30px;
 }
