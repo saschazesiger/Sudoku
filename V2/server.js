@@ -13,12 +13,12 @@ app.get('/', (req, res) => {
     res.render('index.hbs')
 });
 
-app.get('/style.css')
 
-app.get('/get', (req, res) => {
+app.post('/get', (req, res) => {
+    console.log(req, res)
     const puzzle = generator(3);
-    const sudoku = JSON.parse(new Sudoku(puzzle,true))
-    
+    const sudoku = new Sudoku(puzzle,true)
+
     //const offer = JSON.parse(())
     res.send(sudoku)
 });

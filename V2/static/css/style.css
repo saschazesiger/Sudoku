@@ -10,22 +10,39 @@ body{
 
 .container{
     margin: auto;
-    min-width: 200px;
-    min-height: 200px;
+    transition: width 1s;
     box-shadow: 0.3rem 0.3rem 0.6rem #c8d0e7, -0.2rem -0.2rem 0.5rem white;
     border-radius: 20px;
     text-align: center;
+    padding: 20px;
 }
 
 h1{
-    background: -webkit-linear-gradient(170deg, #9cc8ff, #0e1965);
+    background: -webkit-linear-gradient(170deg, #38b8b6, #0e1965);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    font-weight: 900;
+    margin-left: auto;
+    margin-right: auto;
+    width: max-content;
+    margin-bottom: 20px;
+    margin-top: 10px;
 }
 
-.d-difficulty{
+#d-difficulty{
     display: flex;
     flex-direction: row;
+    height: 60px;
+    transition-property: width, height;
+    transition-duration: 1s, 1s;
+    transition-timing-function: ease-in-out;
+    width: 450px;
+}
+
+#d-logs{
+    height: 60px;
+    color: rgb(160, 157, 177);
+    display: none;
 }
 
 .difficulty:checked + .difficulty-label{
@@ -37,8 +54,37 @@ h1{
 .difficulty-label{
     margin: 10px;
     padding: 10px;
-    width: 100px;
+    width: 70px;
     display: block;
     border-radius: 10px;
     color: #9baacf;
+    transition: 1s;
+    cursor: pointer;
+}
+
+.b-start{
+    margin-top: 30px;
+    padding: 10px;
+    border-style: none;
+    background-color: rgba(255, 255, 255, 0);
+    box-shadow: 0.3rem 0.3rem 0.6rem #c8d0e7, -0.2rem -0.2rem 0.5rem white;
+    border-radius: 10px;
+    width: 100%;
+    transition: 1s;
+    color: #001d68;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.b-start:hover{
+    transition: 0.8s;
+    font-size: 15px;
+    color: #9baacf;
+    cursor: pointer;
+}
+
+#b-loader{
+    margin-top: 30px;
+    padding: 10px;
 }
