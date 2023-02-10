@@ -1,12 +1,17 @@
 const {generator, Sudoku} = require('@forfuns/sudoku');
+const hbs = require('hbs')
 const express = require('express');
+const path = require('path');
 
 const app = express();
 app.set('view engine', 'hbs')
-app.set('views','./templates')
+app.set('views', path.join(__dirname, 'views'))
 
-app.use('/static',   express.static('static'))
+app.use(express.static('static'))
 
+app.get('/', (req, res) => {
+    res.render('index.hbs')
+});
 
 app.get('/get', (req, res) => {
     const puzzle = generator(3);
@@ -14,7 +19,7 @@ app.get('/get', (req, res) => {
     
     //const offer = JSON.parse(())
     res.send(sudoku)
-})
+});
 
 
 app.listen(5000, () => {
