@@ -7,11 +7,13 @@ const app = express();
 app.set('view engine', 'hbs')
 app.set('views', path.join(__dirname, 'views'))
 
-app.use(express.static('static'))
+app.use(express.static(path.join(__dirname, 'static')))
 
 app.get('/', (req, res) => {
     res.render('index.hbs')
 });
+
+app.get('/style.css')
 
 app.get('/get', (req, res) => {
     const puzzle = generator(3);
