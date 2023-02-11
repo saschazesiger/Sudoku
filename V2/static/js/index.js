@@ -91,12 +91,12 @@ function handleBlur(field){
             number++
         })
         console.log(correct,wrong,empty,number, startfilled, correct-startfilled)
-
-        if(solution[this.id] === Number(this.value)){
-            document.getElementById(this.id).style.color = 'green';
-            document.getElementById(this.id).disabled = true;
-            document.getElementById('correct').innerText = Math.round((correct-startfilled)/3)*3
+        if (empty === 0 &&  wrong === 0){
+            
         }
+        document.getElementById('correct').innerText = Math.round((correct-startfilled)/3)*3
+        document.getElementById('wrong').innerText = Math.round(wrong/3)*3
+        
 
     }else if (this.value === ""){
         document.getElementById(this.id).style.backgroundColor = '#dae6f3';
