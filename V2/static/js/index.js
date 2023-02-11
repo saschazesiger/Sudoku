@@ -20,7 +20,6 @@ fields.forEach(field => {
 bstart.onclick = function startbutton(){
     let level = 4;
     if(document.getElementById('d-0').checked === true){
-        console.log('level');
         level = 0;
     } else if (document.getElementById('d-1').checked === true){
         level = 1;
@@ -73,9 +72,7 @@ bstart.onclick = function startbutton(){
 };
 
 function handleBlur(field){
-    console.log(this.value, this.id)
     if(this.value >= 1 && this.value <= 9){
-        console.log('valid')
         document.getElementById(this.id).style.backgroundColor = '#dae6f3';
         document.getElementById(this.id).style.color = 'black';
         let correct = 0
@@ -94,9 +91,11 @@ function handleBlur(field){
             number++
         })
         console.log(correct,wrong,empty,number, startfilled, correct-startfilled)
+
         if(solution[this.id] === Number(this.value)){
             document.getElementById(this.id).style.color = 'green';
             document.getElementById(this.id).disabled = true;
+            document.getElementById('correct').innerText = Math.round((correct-startfilled)/3)*3
         }
 
     }else if (this.value === ""){
