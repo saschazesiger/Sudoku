@@ -17,27 +17,28 @@ fields.forEach(field => {
 });
 
 
-bstart.onclick = function startbutton(){
+
+bstart.onclick = function startbutton() {
     let level = 4;
-    if(document.getElementById('d-0').checked === true){
+    if (document.getElementById('d-0').checked === true) {
         level = 0;
-    } else if (document.getElementById('d-1').checked === true){
+    } else if (document.getElementById('d-1').checked === true) {
         level = 1;
-    } else if (document.getElementById('d-2').checked === true){
+    } else if (document.getElementById('d-2').checked === true) {
         level = 2;
-    } else if (document.getElementById('d-3').checked === true){
+    } else if (document.getElementById('d-3').checked === true) {
         level = 3;
     };
-    
-    if (level === 4){
-        if (bstart.innerText === 'Start!'){
+
+    if (level === 4) {
+        if (bstart.innerText === 'Start 🚀') {
             bstart.innerText = 'Choose a level';
-        }else if (bstart.innerText === 'Choose a level'){
+        } else if (bstart.innerText === 'Choose a level') {
             bstart.innerText = 'CHOOSE A LEVEL';
-        }else {
+        } else {
             bstart.innerText = bstart.innerText + "!"
         };
-    } else {    
+    } else {
         bloader.style.display = 'block';
         bstart.style.display = 'none';
         difficulty.style.opacity = 0;
@@ -45,23 +46,26 @@ bstart.onclick = function startbutton(){
         difficulty.style.height = '0px';
         http.open("POST", `/get`);
         http.send();
-        http.onreadystatechange = function(){
-            if(this.readyState === 4){
-                if(this.status === 200){               
+        http.onreadystatechange = function () {
+            if (this.readyState === 4) {
+                if (this.status === 200) {
                     const sudokupuzzle = JSON.parse(http.responseText).puzzle;
                     solution = JSON.parse(http.responseText).answer;
+                    
                     for (let i = 0; i < sudokupuzzle.length; i++) {
-                        if(sudokupuzzle[i] != -1){
+                        if (sudokupuzzle[i] != -1) {
                             document.getElementById(i).value = sudokupuzzle[i]
                             document.getElementById(i).disabled = true;
-                            startfilled ++
-                        }else{
+                            startfilled++
+                        } else {
                             document.getElementById(i).innerHTML = '<input class="inputfield" value=0>'
                         };
-                        document.getElementById('playground').style.display = 'block';
+                        
                         bloader.style.display = 'none';
+                        document.getElementById(i).classList.add('expand');
+
                     }
-                }else{
+                } else {
                     bstart.innerText = 'Try again'
                     bloader.style.display = 'none';
                     bstart.style.display = 'block';
@@ -71,8 +75,8 @@ bstart.onclick = function startbutton(){
     };
 };
 
-function handleBlur(field){
-    if(this.value >= 1 && this.value <= 9){
+function handleBlur(field) {
+    if (this.value >= 1 && this.value <= 9) {
         document.getElementById(this.id).style.backgroundColor = '#dae6f3';
         document.getElementById(this.id).style.color = 'black';
         let correct = 0
@@ -81,28 +85,57 @@ function handleBlur(field){
         let number = 0
         solution.forEach((s) => {
 
-            if (s === Number(document.getElementById(number).value)){
+            if (s === Number(document.getElementById(number).value)) {
                 correct++
-            }else if(document.getElementById(number).value === ""){
+            } else if (document.getElementById(number).value === "") {
                 empty++
-            }else {
+            } else {
                 wrong++
             }
             number++
         })
-        console.log(correct,wrong,empty,number, startfilled, correct-startfilled)
-        if (empty === 0 &&  wrong === 0){
+        empty = 0
+        wrong = 0
+        console.log(correct, wrong, empty, number, startfilled, correct - startfilled)
+        if (empty === 0 && wrong === 0) {
+            for (let i = 0; i < 81; i++) {
+                setTimeout(() => {
+                    document.getElementById(i).style.backgroundColor = 'green';
+                    document.getElementById(i).style.color = 'white';
+                    document.getElementById(i).disabled = true;
+                }, i * 50);
+
+            } 
+        } else if  (empty === 0){
+            for (let i = 0; i < 81; i++) {
+                setTimeout(() => {
+                    document.getElementById(i).style.backgroundColor = 'red';
+                    document.getElementById(i).style.color = 'white';
+                }, i * 3);
+                setTimeout(() => {
+                    document.getElementById(i).style.backgroundColor = '#dae6f3';
+                    document.getElementById(i).style.color = 'black';
+                }, i * 10);
+            } 
             
         }
-        document.getElementById('correct').innerText = Math.round((correct-startfilled)/3)*3
-        document.getElementById('wrong').innerText = Math.round(wrong/3)*3
-        
-
-    }else if (this.value === ""){
+        document.getElementById('correct').innerText = Math.round((correct - startfilled) / 3) * 3;
+        document.getElementById('wrong').innerText = Math.round(wrong / 3) * 3;
+        document.getElementById('empty').innerText = empty;
+        document.getElementById('info').style.display = 'flex';
+    } else if (this.value === "") {
         document.getElementById(this.id).style.backgroundColor = '#dae6f3';
         document.getElementById(this.id).style.color = 'black';
-    }else{
+    } else {
         document.getElementById(this.id).style.backgroundColor = 'red';
         document.getElementById(this.id).style.color = 'white';
+    }
+}
+
+function wait(ms) {
+    var start = new Date().getTime();
+    var end = start;
+    while (end < start + ms) {
+        end = new Date().getTime();
     }
 }

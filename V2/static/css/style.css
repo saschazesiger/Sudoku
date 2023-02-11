@@ -7,6 +7,7 @@ body{
     justify-content: center;
     font-family: Arial, sans-serif;
     text-align: center;
+    overflow: hidden;
 }
 
 .container{
@@ -79,6 +80,9 @@ h1{
     display: flex;
     flex-direction: row;
     justify-content: center;
+    margin-bottom: 30px;
+    color: #2d3d64d5;
+    font-weight: 600;
 }
 
 .b-start:hover{
@@ -94,7 +98,26 @@ h1{
 }
 
 #playground{
+    margin-left: auto;
+    margin-right: auto;
+    width: max-content;
+}
 
+#info{
+    flex-direction: row;
+    justify-content: center;
+    padding-bottom: 30px;
+}
+
+#info p{
+    margin: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-bottom: 30px;
+    border-radius: 5px;
+    width: 70px;
+    box-shadow: 0.3rem 0.3rem 0.6rem #c8d0e7, -0.2rem -0.2rem 0.5rem white;
+    padding: 5px;
 }
 
 .bigrow{
@@ -108,9 +131,16 @@ h1{
     flex-direction: row;
 }
 
-.field{
+.field.expand{
     height: 30px;
     width: 30px;
+}
+
+
+.field{
+    transition: width 1s;
+    height: 0px;
+    width: 0px;
     text-align: center;
     vertical-align: middle;
     transition: 1s;
@@ -122,8 +152,6 @@ h1{
 }
 
 .field:disabled{
-    width: 30px;
-    height: 30px;
     background-color: rgba(255, 255, 255, 0);
     border-style: none;
     box-shadow: none;
@@ -136,7 +164,8 @@ h1{
 .panel{
     padding: 2px;
     margin: -1px;
+    border-width: 2px;
     border-style: solid;
-    border-color: #9baacf;
+    border-color: #ced1da;
     background-color: #E3EBF5;
 }
