@@ -94,8 +94,6 @@ function handleBlur(field) {
             }
             number++
         })
-        empty = 0
-        wrong = 0
         console.log(correct, wrong, empty, number, startfilled, correct - startfilled)
         if (empty === 0 && wrong === 0) {
             for (let i = 0; i < 81; i++) {
