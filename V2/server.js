@@ -18,7 +18,7 @@ app.post('/get', (req, res) => {
     console.log(req, res)
     const puzzle = generator(3);
     const sudoku = new Sudoku(puzzle,true)
-
+    console.log(sudoku)
     //const offer = JSON.parse(())
     res.send(sudoku)
 });

@@ -5,12 +5,17 @@ const btext = document.getElementById('b-text');
 const bloader = document.getElementById('b-loader');
 const difficulty = document.getElementById('d-difficulty');
 const logs = document.getElementById('d-logs');
+let solution = ""
+let startfilled = 0
 
 //Variables
 const http = new XMLHttpRequest();
-
-
 const difficultylevel = document.getElementsByName('difficulty');
+const fields = document.querySelectorAll(".field");
+fields.forEach(field => {
+    field.addEventListener("blur", handleBlur);
+});
+
 
 bstart.onclick = function startbutton(){
     let level = 4;
@@ -45,9 +50,14 @@ bstart.onclick = function startbutton(){
             if(this.readyState === 4){
                 if(this.status === 200){               
                     const sudokupuzzle = JSON.parse(http.responseText).puzzle;
+                    solution = JSON.parse(http.responseText).answer;
                     for (let i = 0; i < sudokupuzzle.length; i++) {
                         if(sudokupuzzle[i] != -1){
-                            document.getElementById(i).innerText = sudokupuzzle[i]
+                            document.getElementById(i).value = sudokupuzzle[i]
+                            document.getElementById(i).disabled = true;
+                            startfilled ++
+                        }else{
+                            document.getElementById(i).innerHTML = '<input class="inputfield" value=0>'
                         };
                         document.getElementById('playground').style.display = 'block';
                         bloader.style.display = 'none';
@@ -61,3 +71,39 @@ bstart.onclick = function startbutton(){
         };
     };
 };
+
+function handleBlur(field){
+    console.log(this.value, this.id)
+    if(this.value >= 1 && this.value <= 9){
+        console.log('valid')
+        document.getElementById(this.id).style.backgroundColor = '#dae6f3';
+        document.getElementById(this.id).style.color = 'black';
+        let correct = 0
+        let wrong = 0
+        let empty = 0
+        let number = 0
+        solution.forEach((s) => {
+
+            if (s === Number(document.getElementById(number).value)){
+                correct++
+            }else if(document.getElementById(number).value === ""){
+                empty++
+            }else {
+                wrong++
+            }
+            number++
+        })
+        console.log(correct,wrong,empty,number, startfilled, correct-startfilled)
+        if(solution[this.id] === Number(this.value)){
+            document.getElementById(this.id).style.color = 'green';
+            document.getElementById(this.id).disabled = true;
+        }
+
+    }else if (this.value === ""){
+        document.getElementById(this.id).style.backgroundColor = '#dae6f3';
+        document.getElementById(this.id).style.color = 'black';
+    }else{
+        document.getElementById(this.id).style.backgroundColor = 'red';
+        document.getElementById(this.id).style.color = 'white';
+    }
+}
