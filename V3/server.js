@@ -97,16 +97,11 @@ app.post('/register', async (req, res) => {
 
     const result = await sql(`SELECT * FROM user WHERE email = "${req.body?.username}"`)
     if (result.results.length === 0) {
-        bcrypt.hash(req.body?.password, 10, (err, hash) => {
-            if (err) {
-                // Fehler beim Hashen des Passworts
-                console.error(err);
-                return;
-            }
+        const hash = await bcrypt.hash(req.body?.password, 10)
             const verify = uuid.v4()
-            sql(`INSERT INTO user (email, password, verify, name) VALUES ("${req.body?.username}","${hash}","${verify}","${req.body?.name}")`)
-            sendMail({email:req.body?.username,verify,name:req.body?.name})
-        });
+            await sql(`INSERT INTO user (email, password, verify, name) VALUES ("${req.body?.username}","${hash}","${verify}","${req.body?.name}")`)
+            await sendMail({email:req.body?.username,verify,name:req.body?.name})
+
 
     } else {
         return res.render('register.hbs', { error: "Benutzer existiert bereits" })
@@ -131,8 +126,8 @@ app.post('/reset', async (req, res) => {
     if(user.results.length === 0){
         return res.render('reset.hbs', { error: "Es existiert kein Benutzer mit dieser Email" })
     }
-    sql(`UPDATE user SET passwordverify = "${verify}" WHERE email = "${req.body?.username}"`)
-    sendPass({email:req.body?.username,verify,name:user.results[0].name})
+    await sql(`UPDATE user SET passwordverify = "${verify}" WHERE email = "${req.body?.username}"`)
+    await sendPass({email:req.body?.username,verify,name:user.results[0].name})
     return res.render('reset.hbs', { error: "Email erfolgreich versendet" })
 })
 
@@ -162,14 +157,9 @@ app.post('/password', async (req, res) => {
     if (result.results.length === 0) {
         return res.render('reset.hbs', { error: "Link ungültig" })
     } else {
-        await bcrypt.hash(req.body?.password, 10, (err, hash) => {
-            if (err) {
-                // Fehler beim Hashen des Passworts
-                console.error(err);
-                return;
-            }
-            sql(`UPDATE user SET password = "${hash}", passwordverify = NULL WHERE passwordverify = "${req.body?.token}"`)
-        });
+        const hash = await bcrypt.hash(req.body?.password, 10)
+
+        await sql(`UPDATE user SET password = "${hash}", passwordverify = NULL WHERE passwordverify = "${req.body?.token}"`)
         return res.render('login.hbs', { error: "Passwort erfolgreich aktualisiert" })
     }
 })
