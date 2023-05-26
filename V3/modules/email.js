@@ -8,7 +8,7 @@ async function sendMail(user) {
         secure: false, // Setze auf "true", wenn du eine SSL-Verbindung verwenden möchtest
         auth: {
             user: 'no-scam-login@mail.ch', // Hier deine E-Mail-Adresse eintragen
-            pass: '123Heinrich!' // Hier dein E-Mail-Passwort eintragen
+            pass: process.env.smtp_password // Hier dein E-Mail-Passwort eintragen
         }
     });
 

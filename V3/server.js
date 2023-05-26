@@ -108,16 +108,26 @@ app.post('/register', async (req, res) => {
     } else {
         return res.render('register.hbs', { error: "Benutzer existiert bereits" })
     }
-    res.render('verify.hbs')
+    res.redirect('/ok')
 })
 
 app.get('/register', async (req, res) => {
     res.render('register.hbs')
 })
 
-app.get('/verify/:code', async (req, res) => {
-    const verify = req.query.code
-    res.render('login.hbs')
+app.get('/ok', async (req, res) => {
+    res.render('verify.hbs')
+})
+
+app.get('/verify', async (req, res) => {
+    const verify = req.query.id
+    const user = await sql(`SELECT * FROM user WHERE verify = "${verify}"`)
+    if(user.results.length === 0){
+        return res.render('login.hbs',{error:"Kein Benutzer gefunden"})
+    }else{
+        await sql(`UPDATE user SET verify = NULL WHERE verify = "${verify}"`)
+        return res.render('login.hbs',{error:"Konto erfolgreich verifiziert"})
+    }
 })
 
 app.get('/logout', async (req, res) => {
