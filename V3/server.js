@@ -116,8 +116,8 @@ app.get('/register', async (req, res) => {
 })
 
 app.get('/verify/:code', async (req, res) => {
-    
-    res.render('register.hbs')
+    const verify = req.query.code
+    res.render('login.hbs')
 })
 
 app.get('/logout', async (req, res) => {

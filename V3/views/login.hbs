@@ -13,6 +13,7 @@
 <body>
     <div class="container">
         <h1>Login</h1>
+        <p>Stattdessen <a href="register">registrieren</a>?</p>
         <form method="post" action="/login">
             <div class="form-group">
                 <input type="email" id="username" class="input" placeholder="Email" name="username" required>
@@ -21,6 +22,7 @@
                 <input type="password" id="password" class="input" placeholder="Passwort" name="password" required>
             </div>
             <button type="submit" class="b-start">Anmelden</button>
+            <p>{{ error }}</p>
         </form>
 
 
