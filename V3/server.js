@@ -8,7 +8,7 @@ const mysql = require('mysql2');
 const uuid = require('uuid');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
-const {sendMail} = require('./modules/email.js')
+const {sendMail,sendPass} = require('./modules/email.js')
 
 const log = msg => console.log(new Date(), msg);
 
@@ -77,7 +77,10 @@ app.post('/login', async (req, res) => {
     }else{
         res.render('login.hbs',{error:"Passwort falsch"})
     }
-    
+})
+
+app.get('/register', async (req, res) => {
+    res.render('register.hbs')
 })
 
 app.post('/register', async (req, res) => {
@@ -111,9 +114,67 @@ app.post('/register', async (req, res) => {
     res.redirect('/ok')
 })
 
-app.get('/register', async (req, res) => {
-    res.render('register.hbs')
+app.get('/reset', async (req, res) => {
+    res.render('reset.hbs')
 })
+
+app.post('/reset', async (req, res) => {
+    const verify = uuid.v4()
+    let user
+    if (!req.body?.username) {
+        return res.render('reset.hbs', { error: "Bitte fülle alle Felder aus" })
+    }
+    if(!/^[0-9a-zA-Z-.@]+$/.test(req.body?.username)){
+        return res.render('reset.hbs', { error: "Email beinhaltet ungültige Zeichen" })
+    }
+    user = await sql(`SELECT * FROM user WHERE email = "${req.body?.username}"`)
+    if(user.results.length === 0){
+        return res.render('reset.hbs', { error: "Es existiert kein Benutzer mit dieser Email" })
+    }
+    sql(`UPDATE user SET passwordverify = "${verify}" WHERE email = "${req.body?.username}"`)
+    sendPass({email:req.body?.username,verify,name:user.results[0].name})
+    return res.render('reset.hbs', { error: "Email erfolgreich versendet" })
+})
+
+app.get('/password', async (req, res) => {
+    const verify = req.query.id
+    log(verify)
+    const user = await sql(`SELECT * FROM user WHERE passwordverify = "${verify}"`)
+    if(user.results.length === 0){
+        return res.render('reset.hbs',{error:"Ungültiger Link"})
+    }else{
+        log(verify)
+        return res.render('reset2.hbs',{id:verify})
+    }
+})
+
+app.post('/password', async (req, res) => {
+
+    if (!req.body?.token && !req.body?.password && !req.body?.repeatpassword) {
+        return res.render('reset.hbs', { error: "Bitte fülle alle Felder aus" })
+    }
+    if(req.body?.password !== req.body?.repeatpassword){
+        return res.render('reset.hbs', { error: "Passwörter stimmen nicht überein" })
+    }
+    log(req.body?.token)
+    const result = await sql(`SELECT * FROM user WHERE passwordverify = "${req.body?.token}"`)
+    log(result)
+    if (result.results.length === 0) {
+        return res.render('reset.hbs', { error: "Link ungültig" })
+    } else {
+        await bcrypt.hash(req.body?.password, 10, (err, hash) => {
+            if (err) {
+                // Fehler beim Hashen des Passworts
+                console.error(err);
+                return;
+            }
+            sql(`UPDATE user SET password = "${hash}", passwordverify = NULL WHERE passwordverify = "${req.body?.token}"`)
+        });
+        return res.render('login.hbs', { error: "Passwort erfolgreich aktualisiert" })
+    }
+})
+
+
 
 app.get('/ok', async (req, res) => {
     res.render('verify.hbs')
