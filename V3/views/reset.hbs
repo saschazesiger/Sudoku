@@ -6,25 +6,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-
+         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+     <script>
+       function onSubmit(token) {
+         document.getElementById("demo-form").submit();
+       }
+     </script>
     <title>Sudoku</title>
 </head>
 
 <body>
     <div class="container">
         <h1>Recovery</h1>
-        <p><a href="login">Login</a>  <a href="register">Registrieren</a></p>
+        <p><a href="login" class="link">Login</a>  <a href="register" class="link" style="margin-left:10px;">Registrieren</a></p>
         <form method="post" action="/reset">
             <div class="form-group">
                 <input type="email" id="username" class="input" placeholder="Email" name="username" required>
             </div>
-            <button type="submit" class="b-start">Zurücksetzen</button>
+            <button class="g-recaptcha b-start" data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm" data-callback="onSubmit">Zurücksetzen</button>
             <p>{{ error }}</p>
         </form>
 
 
     </div>
 </body>
-<script src="/js/index.js"></script>
 
 </html>

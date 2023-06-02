@@ -67,6 +67,11 @@ h1{
     cursor: pointer;
 }
 
+.link{
+    text-decoration: none;
+    color: #083094;
+}
+
 .b-start{
     margin-top: 30px;
     padding: 10px;
