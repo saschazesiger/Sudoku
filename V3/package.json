@@ -20,6 +20,7 @@
     "jsonwebtoken": "^9.0.0",
     "mysql2": "^3.3.2",
     "nodemailer": "^6.9.2",
+    "recaptcha-v3": "^1.10.0",
     "uuid": "^9.0.0"
   }
 }

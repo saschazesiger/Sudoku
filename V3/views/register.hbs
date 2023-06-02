@@ -5,41 +5,100 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"
+        integrity="sha512-TZlMGFY9xKj38t/5m2FzJ+RM/aD5alMHDe26p0mYUMoCF5G7ibfHUQILq0qQPV3wlsnCwL+TPRNK4vIWGLOkUQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <title>Sudoku</title>
-         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-     <script>
-       function onSubmit(token) {
-         document.getElementById("demo-form").submit();
-       }
-     </script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function onSubmit(token) {
+            document.getElementById("register").submit();
+        }
+    </script>
 </head>
 
 <body>
     <div class="container">
         <h1>Registrieren</h1>
         <p>Stattdessen <a href="/" class="link">anmelden</a>?</p>
-        <form method="post" action="/register">
+        <form method="post" action="/register" id="register">
             <div class="form-group">
-                <input type="text" id="username" placeholder="Name" class="input" name="name" required>
+                <input type="text" id="name" placeholder="Name" class="input" name="name" required>
             </div>
             <div class="form-group">
                 <input type="email" id="username" placeholder="Email" class="input" name="username" required>
             </div>
             <div class="form-group">
                 <input type="password" id="password" placeholder="Passwort" class="input" name="password" required>
+                <div style="max-width: 300px;"><b id="meter"> </b><br>
+                    <p id="text"> </p>
+                </div>
             </div>
             <div class="form-group">
-                <input type="password" id="password" placeholder="Passwort wiederholen" class="input"
+                <input type="password" id="repeatpassword" placeholder="Passwort wiederholen" class="input"
                     name="repeatpassword" required>
             </div>
-            
-            <button class="g-recaptcha b-start" data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm" data-callback="onSubmit">Registrieren</button>
+
+            <button class="g-recaptcha b-start" id="submit" data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm"
+                data-callback="onSubmit" style="display:none;">Registrieren 🎉</button>
+            <p id="passdialog">Wähle ein sicheres Passwort um fortzufahren</p>
             <p>{{ error }}</p>
         </form>
 
 
     </div>
+    <script>
+        var strength = {
+            0: "Worst ☹",
+            1: "Bad ☹",
+            2: "Weak ☹",
+            3: "Good ☺",
+            4: "Strong ☻"
+        }
+
+        let now
+
+        var password = document.getElementById('password');
+        var repeatpassword = document.getElementById('repeatpassword');
+        var meter = document.getElementById('meter');
+        var text = document.getElementById('text');
+
+        repeatpassword.addEventListener('input', function () {
+            if (repeatpassword.value == password.value) {
+                if (now > 2) {
+                    document.getElementById('submit').style.display = "block";
+                    document.getElementById('passdialog').style.display = "none";
+                } else {
+                    document.getElementById('submit').style.display = "none";
+                    document.getElementById('passdialog').style.display = "block";
+                    document.getElementById('passdialog').innerText = "Wähle ein sicheres Passwort um fortzufahren";
+                }
+            } else {
+                document.getElementById('submit').style.display = "none";
+                document.getElementById('passdialog').style.display = "block";
+                document.getElementById('passdialog').innerText = "Die Passwörter stimmen nicht überein";
+            }
+        });
+
+        password.addEventListener('input', function () {
+            var val = password.value;
+            var result = zxcvbn(val);
+
+            // Update the password strength meter
+            meter.value = result.score;
+            now = result.score;
+
+
+            // Update the text indicator
+            if (val !== "") {
+                text.innerHTML = "Strength: " + "<strong>" + strength[result.score] + " </strong>" + "<span class='feedback'>" + result.feedback.warning + " " + result.feedback.suggestions + "</span>";
+            }
+            else {
+                text.innerHTML = "";
+            }
+        });
+    </script>
 </body>
 
 </html>

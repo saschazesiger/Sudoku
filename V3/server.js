@@ -39,6 +39,7 @@ app.get('/', async (req, res) => {
                 logged = true
             }
         } catch (e) {
+            res.clearCookie('auth');
             log("Signing error")
         }
     }
