@@ -40,7 +40,7 @@
                     name="repeatpassword" required>
             </div>
 
-            <button class="g-recaptcha b-start" id="submit" data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm"
+            <button class="g-recaptcha b-start" id="submitit" data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm"
                 data-callback="onSubmit" style="display:none;">Registrieren 🎉</button>
             <p id="passdialog">Wähle ein sicheres Passwort um fortzufahren</p>
             <p>{{ error }}</p>
@@ -67,15 +67,15 @@
         repeatpassword.addEventListener('input', function () {
             if (repeatpassword.value == password.value) {
                 if (now > 2) {
-                    document.getElementById('submit').style.display = "block";
+                    document.getElementById('submitit').style.display = "block";
                     document.getElementById('passdialog').style.display = "none";
                 } else {
-                    document.getElementById('submit').style.display = "none";
+                    document.getElementById('submitit').style.display = "none";
                     document.getElementById('passdialog').style.display = "block";
                     document.getElementById('passdialog').innerText = "Wähle ein sicheres Passwort um fortzufahren";
                 }
             } else {
-                document.getElementById('submit').style.display = "none";
+                document.getElementById('submitit').style.display = "none";
                 document.getElementById('passdialog').style.display = "block";
                 document.getElementById('passdialog').innerText = "Die Passwörter stimmen nicht überein";
             }
