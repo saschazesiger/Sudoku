@@ -7,7 +7,8 @@ const playground = document.getElementById('playground');
 const history = document.getElementById('history');
 const difficulty = document.getElementById('d-difficulty');
 const logs = document.getElementById('d-logs');
-let solution = ""
+const icon = document.getElementById('icon');
+let solution = []
 let startfilled = 0
 
 //Variables
@@ -34,9 +35,9 @@ bstart.onclick = function startbutton() {
 
     if (level === 4) {
         if (bstart.innerText === 'Start 🚀') {
-            bstart.innerText = 'Choose a level';
-        } else if (bstart.innerText === 'Choose a level') {
-            bstart.innerText = 'CHOOSE A LEVEL';
+            bstart.innerText = 'Wähle ein Level';
+        } else if (bstart.innerText === 'Wähle ein Level') {
+            bstart.innerText = 'WÄHLE EIN LEVEL';
         } else {
             bstart.innerText = bstart.innerText + "!"
         };
@@ -55,7 +56,7 @@ bstart.onclick = function startbutton() {
                 if (this.status === 200) {
                     const sudokupuzzle = JSON.parse(http.responseText).puzzle;
                     solution = JSON.parse(http.responseText).answer;
-                    
+
                     for (let i = 0; i < sudokupuzzle.length; i++) {
                         if (sudokupuzzle[i] != -1) {
                             document.getElementById(i).value = sudokupuzzle[i]
@@ -64,10 +65,9 @@ bstart.onclick = function startbutton() {
                         } else {
                             document.getElementById(i).innerHTML = '<input class="inputfield" value=0>'
                         };
-                        
+
                         bloader.style.display = 'none';
                         document.getElementById(i).classList.add('expand');
-
                     }
                 } else {
                     bstart.innerText = 'Try again'
@@ -79,7 +79,47 @@ bstart.onclick = function startbutton() {
     };
 };
 
+function startExisting(progress, solution2) {
+    console.log(progress, solution2)
+    let sudokupuzzle = []
+    for (const i in progress) {
+        if (progress[i] == 0) {
+            sudokupuzzle.push(-1)
+        } else {
+            sudokupuzzle.push(progress[i])
+        }
+    }
+    for (const i in solution2) {
+        solution.push(solution2[i])
+    }
+    console.log(sudokupuzzle,solution)
+
+    playground.style.display = 'block';
+    history.style.display = 'none';
+    bloader.style.display = 'block';
+    bstart.style.display = 'none';
+    difficulty.style.opacity = 0;
+    difficulty.style.width = '0px';
+    difficulty.style.height = '0px';
+
+
+    for (let i = 0; i < sudokupuzzle.length; i++) {
+        if (sudokupuzzle[i] != -1) {
+            document.getElementById(i).value = sudokupuzzle[i]
+            document.getElementById(i).disabled = true;
+            startfilled++
+        } else {
+            document.getElementById(i).innerHTML = '<input class="inputfield" value=0>'
+        };
+
+        bloader.style.display = 'none';
+        document.getElementById(i).classList.add('expand');
+
+    }
+};
+
 function handleBlur(field) {
+    icon.innerText = "🔄"
     if (this.value >= 1 && this.value <= 9) {
         document.getElementById(this.id).style.backgroundColor = '#dae6f3';
         document.getElementById(this.id).style.color = 'black';
@@ -91,7 +131,7 @@ function handleBlur(field) {
         let sudoku = ""
         solution.forEach((s) => {
             sudoku = sudoku + s
-            if(document.getElementById(number).value === ""){
+            if (document.getElementById(number).value === "") {
                 progress = progress + 0
             } else {
                 progress = progress + document.getElementById(number).value
@@ -106,11 +146,20 @@ function handleBlur(field) {
             }
             number++
         })
-        console.log(correct, wrong, empty, number, startfilled, correct - startfilled,sudoku,progress)
+        console.log(correct, wrong, empty, number, startfilled, correct - startfilled, sudoku, progress)
         fetch(`/api?reason=save&progress=${progress}&solution=${sudoku}`)
             .then(response => response.text())
-            .then(body => console.log(body))
-            .catch(error => console.error('Fehler:', error));
+            .then((data) => {
+                if (JSON.parse(data).success === 1) {
+                    icon.innerText = "✅"
+                } else {
+                    icon.innerText = "❌"
+                }
+            })
+            .catch((data) => {
+                console.log(data)
+                icon.innerText = "❌"
+            });
         if (empty === 0 && wrong === 0) {
             for (let i = 0; i < 81; i++) {
                 setTimeout(() => {
@@ -119,8 +168,8 @@ function handleBlur(field) {
                     document.getElementById(i).disabled = true;
                 }, i * 50);
 
-            } 
-        } else if  (empty === 0){
+            }
+        } else if (empty === 0) {
             for (let i = 0; i < 81; i++) {
                 setTimeout(() => {
                     document.getElementById(i).style.backgroundColor = 'red';
@@ -130,8 +179,8 @@ function handleBlur(field) {
                     document.getElementById(i).style.backgroundColor = '#dae6f3';
                     document.getElementById(i).style.color = 'black';
                 }, i * 10);
-            } 
-            
+            }
+
         }
         document.getElementById('correct').innerText = Math.round((correct - startfilled) / 3) * 3;
         document.getElementById('wrong').innerText = Math.round(wrong / 3) * 3;

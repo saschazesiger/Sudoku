@@ -13,21 +13,27 @@
 <body>
     <div class="container">
         <h1>SUDOKU</h1>
+        {{#if create}}
         <div id="d-difficulty">
             <input type="radio" class="difficulty" name="difficulty" value="0" id="d-0" hidden><label
-                class="difficulty-label" for="d-0">Easy</label>
+                class="difficulty-label" for="d-0">Einfach</label>
             <input type="radio" class="difficulty" name="difficulty" value="1" id="d-1" hidden><label
-                class="difficulty-label" for="d-1">Medium</label>
+                class="difficulty-label" for="d-1">Mittel</label>
             <input type="radio" class="difficulty" name="difficulty" value="2" id="d-2" hidden><label
-                class="difficulty-label" for="d-2">Hard</label>
+                class="difficulty-label" for="d-2">Schwer</label>
             <input type="radio" class="difficulty" name="difficulty" value="3" id="d-3" hidden><label
-                class="difficulty-label" for="d-3">Godmode</label>
+                class="difficulty-label" for="d-3">Extrem</label>
         </div>
         <button type="button" id="b-start" class="b-start">Start 🚀</button>
+        {{else}}
+            <div id="b-start" class="b-start" style="display:none;"></div>
+            <div id="d-difficulty" style="display:none;"></div>
+            <p >Lösche ein Sudoku um weitere zu erstellen</p>
+        {{/if}}
         <div id="history">
-        <p >Oder mache an einem bestehenden weiter:</p>
+        <p >Weiterspielen:</p>
         {{#each sudokus}}
-        <div class="sudokus">Erstellt:&nbsp;<b> {{this.created}} </b>&nbsp;Bearbeitet:&nbsp;<b> {{this.updated}} </b></div>
+        <div class="sudokus"><br><div style="margin-right:10px">Erstellt:&nbsp;<b> {{this.created}} </b>&nbsp;Bearbeitet:&nbsp;<b> {{this.updated}} </b></div><br><div style="display:flex;flex-direction:row;justify-content:center;"><a href="/api?reason=delete&id={{this.id}}" class="b-start">❌</a><button onclick="startExisting('{{this.progress}}','{{this.solution}}')" class="b-start">▶️</button></div></div>
         {{/each}}
         </div>
         <div id="b-loader" class="buttonloader" title="7" hidden>
@@ -225,7 +231,8 @@
                     </div>
                 </div>
             </div><br>
-            <a href="/">⬅️ Zurück</a>
+            <a href="/">⬅️ Zurück </a>
+            <div id="icon" class="icon">💤</div>
         </div>
         <p>Nicht {{user}}? <a href="/logout">Ausloggen</a></p>
     </div>

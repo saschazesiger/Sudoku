@@ -27,18 +27,13 @@ app.get('/', async (req, res) => {
     let verified = false
     let sqluser
     let sudokus
+    let create = true
     if (req.cookies.auth) {
         let authHeader = req.cookies.auth;
         try {
             user = await jwt.verify(authHeader, process.env.express_secret)
             log("userid:" + JSON.stringify(user))
             sqluser = await sql(`SELECT * FROM user WHERE email = "${user.id}"`)
-            sudokus = await sql(`SELECT * FROM sudoku WHERE id_user = "${sqluser.results[0].id}"`)
-            for (const sudoku in sudokus.results) {
-                sudokus.results[sudoku].updated = formatDateRelativeToNow(sudokus.results[sudoku].updated)
-                sudokus.results[sudoku].created = formatDateRelativeToNow(sudokus.results[sudoku].created)
-                
-            }
             if (!sqluser.results[0].verify) {
                 verified = true
             }
@@ -47,7 +42,7 @@ app.get('/', async (req, res) => {
             }
         } catch (e) {
             res.clearCookie('auth');
-            log("Signing error")
+            log("Signing error" + e)
             return res.render('login.hbs', { error: "Setzen des Cookies nicht möglich" })
         }
     }
@@ -57,8 +52,15 @@ app.get('/', async (req, res) => {
     } else if (verified !== true) {
         return res.render('verify.hbs')
     } else {
-
-        return res.render('index.hbs', { user: sqluser.results[0].name, sudokus: sudokus.results })
+        sudokus = await sql(`SELECT * FROM sudoku WHERE id_user = "${sqluser.results[0].id}" ORDER BY updated DESC;`)
+        for (const sudoku in sudokus.results) {
+            sudokus.results[sudoku].updated = await formatDateRelativeToNow(sudokus.results[sudoku].updated)
+            sudokus.results[sudoku].created = await formatDateRelativeToNow(sudokus.results[sudoku].created)
+        }
+        if (sudokus.results.length >= 2) {
+            create = false
+        }
+        return res.render('index.hbs', { user: sqluser.results[0].name, sudokus: sudokus.results,create:create })
     }
 });
 
@@ -100,6 +102,12 @@ app.get('/api', async (req, res) => {
                 await sql(`INSERT INTO sudoku (id_user, progress, solution) VALUES ("${sqluser.results[0].id}","${req.query?.progress}","${req.query?.solution}")`)
             }
             return res.json({ success: 1 })
+        } else if (req.query?.reason === "delete" && req.query?.id){
+            const todelete = await sql(`SELECT * FROM sudoku WHERE id = "${req.query?.id}"`)
+            if (todelete.results.length !== 0 && todelete.results[0].id_user === sqluser.results[0].id) {
+                await sql(`DELETE FROM sudoku WHERE id = "${req.query?.id}"`)
+            }
+            return res.redirect('/')
         } else {
             return res.json({ success: 0 })
         }
@@ -242,10 +250,8 @@ app.get('/logout', async (req, res) => {
 })
 
 app.post('/get', (req, res) => {
-    const puzzle = generator(3);
+    const puzzle = generator(2);
     const sudoku = new Sudoku(puzzle, true)
-    console.log(sudoku.debug())
-    //const offer = JSON.parse(())
     res.send(sudoku)
 });
 
@@ -273,42 +279,44 @@ async function sql(query) {
     }
 }
 
-function formatDateRelativeToNow(date) {
-    const jetzt = new Date(date);
-    const differenzInSekunden = Math.floor((jetzt - datum) / 1000); // Differenz in Sekunden
-  
+async function formatDateRelativeToNow(datum) {
+    const dann = new Date(datum);
+    log()
+    const jetzt = new Date((await sql(`SELECT NOW()`)).results[0]['now()']);
+    const differenzInSekunden = Math.floor((jetzt - dann) / 1000); // Differenz in Sekunden
+    log(differenzInSekunden)
     if (differenzInSekunden < 5) {
-      return "Gerade eben";
+        return "Gerade eben";
     } else if (differenzInSekunden < 60) {
-      return "Einige Sekunden her";
+        return "Vor einigen Sekunden";
     } else if (differenzInSekunden < 120) {
-      return "Eine Minute her";
+        return "Vor einer Minute";
     } else if (differenzInSekunden < 500) {
-      return "Einige Minuten her";
+        return "Vor einigen Minuten";
     } else if (differenzInSekunden < 900) {
-      return "Eine viertel Stunde her";
+        return "Vor einer viertel Stunde";
     } else if (differenzInSekunden < 1800) {
-      return "Eine halbe Stunde her";
+        return "Vor einer halben Stunde";
     } else if (differenzInSekunden < 3600) {
-      return "Eine Stunde her";
+        return "Vor einer Stunde";
     } else if (differenzInSekunden < 86400) {
-      return "Mehrere Stunden her";
+        return "Vor mehreren Stunden";
     } else if (differenzInSekunden < 172800) {
-      return "Einen Tag her";
+        return "Vor einem Tag";
     } else if (differenzInSekunden < 604800) {
-      return "Mehrere Tage her";
+        return "Vor mehreren Tagen";
     } else if (differenzInSekunden < 1209600) {
-      return "Eine Woche her";
+        return "Vor einer Woche";
     } else if (differenzInSekunden < 2592000) {
-      return "Mehrere Wochen her";
+        return "Vor mehreren Wochen";
     } else if (differenzInSekunden < 5184000) {
-      return "Einen Monat her";
+        return "Vor einem Monat";
     } else if (differenzInSekunden < 31536000) {
-      return "Mehrere Monate her";
+        return "Vor mehreren Monaten";
     } else {
-      return "Vor langer Zeit";
+        return "Vor langer Zeit";
     }
-  }
+}
 
 
 app.listen(5000, () => {
