@@ -24,6 +24,12 @@
                 class="difficulty-label" for="d-3">Godmode</label>
         </div>
         <button type="button" id="b-start" class="b-start">Start 🚀</button>
+        <div id="history">
+        <p >Oder mache an einem bestehenden weiter:</p>
+        {{#each sudokus}}
+        <div class="sudokus">Erstellt:&nbsp;<b> {{this.created}} </b>&nbsp;Bearbeitet:&nbsp;<b> {{this.updated}} </b></div>
+        {{/each}}
+        </div>
         <div id="b-loader" class="buttonloader" title="7" hidden>
             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="18px" height="20px"
@@ -54,7 +60,7 @@
                 </rect>
             </svg>
         </div>
-        <div id="playground">
+        <div id="playground" style="display:none;">
             <div id="info" hidden>
                 <p>✔️ ~<span id="correct">0</span></p>
                 <p>❌ ~<span id="wrong">0</span></p>
@@ -218,7 +224,8 @@
                         <input class="field" id="80">
                     </div>
                 </div>
-            </div>
+            </div><br>
+            <a href="/">⬅️ Zurück</a>
         </div>
         <p>Nicht {{user}}? <a href="/logout">Ausloggen</a></p>
     </div>

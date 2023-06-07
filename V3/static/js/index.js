@@ -3,6 +3,8 @@
 const bstart = document.getElementById('b-start');
 const btext = document.getElementById('b-text');
 const bloader = document.getElementById('b-loader');
+const playground = document.getElementById('playground');
+const history = document.getElementById('history');
 const difficulty = document.getElementById('d-difficulty');
 const logs = document.getElementById('d-logs');
 let solution = ""
@@ -39,6 +41,8 @@ bstart.onclick = function startbutton() {
             bstart.innerText = bstart.innerText + "!"
         };
     } else {
+        playground.style.display = 'block';
+        history.style.display = 'none';
         bloader.style.display = 'block';
         bstart.style.display = 'none';
         difficulty.style.opacity = 0;
@@ -83,7 +87,15 @@ function handleBlur(field) {
         let wrong = 0
         let empty = 0
         let number = 0
+        let progress = ""
+        let sudoku = ""
         solution.forEach((s) => {
+            sudoku = sudoku + s
+            if(document.getElementById(number).value === ""){
+                progress = progress + 0
+            } else {
+                progress = progress + document.getElementById(number).value
+            }
 
             if (s === Number(document.getElementById(number).value)) {
                 correct++
@@ -94,7 +106,11 @@ function handleBlur(field) {
             }
             number++
         })
-        console.log(correct, wrong, empty, number, startfilled, correct - startfilled)
+        console.log(correct, wrong, empty, number, startfilled, correct - startfilled,sudoku,progress)
+        fetch(`/api?reason=save&progress=${progress}&solution=${sudoku}`)
+            .then(response => response.text())
+            .then(body => console.log(body))
+            .catch(error => console.error('Fehler:', error));
         if (empty === 0 && wrong === 0) {
             for (let i = 0; i < 81; i++) {
                 setTimeout(() => {
@@ -129,6 +145,8 @@ function handleBlur(field) {
         document.getElementById(this.id).style.color = 'white';
     }
 }
+
+
 
 function wait(ms) {
     var start = new Date().getTime();
