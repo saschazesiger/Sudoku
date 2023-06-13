@@ -51,8 +51,8 @@ strong {
 }
 
 .overlay {
-  width: 500px;
-  max-width: 1140px;
+
+  max-width: 600px;
   max-height: 640px;
   padding: 5rem 4rem;
   display: flex;
