@@ -5,19 +5,38 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
-
+      <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="/css/v2.css"/>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+     <script>
+       function onSubmit(token) {
+         document.getElementById("login").submit();
+       }
+     </script>
     <title>Sudoku</title>
 </head>
 
 <body>
-    <div class="container">
-        <h1>SUDOKU</h1>
-        <p>Danke fürs registrieren! Verifiziere deine Email um fortzufahren.</p>
-
-
+    <canvas class="orb-canvas"></canvas>
+    <div class="overlay">
+        <form  id="login" action="/login" method="POST">
+        <div class="overlay__inner">
+        <!-- Title -->
+        <h1 class="overlay__title">
+          <span class="text-gradient">Success</span>!
+        </h1>
+        <!-- Description -->
+        <p class="overlay__description">
+            
+          <strong>We've sent you a verification mail </strong> to your email address. Please click on the link in the mail to verify your account.
+        </p>
+        <!-- Buttons -->
+        </div>
+        </form>
+        {{#if error }}<p class="alert">{{ error }}</p>{{/if}}
+      </div>
     </div>
 </body>
-<script src="/js/index.js"></script>
-
+<script type="module" src="/js/v2.js"></script>
 </html>

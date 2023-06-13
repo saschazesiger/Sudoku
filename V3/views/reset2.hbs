@@ -5,32 +5,118 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"
+        integrity="sha512-TZlMGFY9xKj38t/5m2FzJ+RM/aD5alMHDe26p0mYUMoCF5G7ibfHUQILq0qQPV3wlsnCwL+TPRNK4vIWGLOkUQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="/css/v2.css"/>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <script>
+        function onSubmit(token) {
+            document.getElementById("register").submit();
+        }
+    </script>
 
     <title>Sudoku</title>
 </head>
 
 <body>
-    <div class="container">
-        <h1>Recovery</h1>
-        <p><a href="register">Login</a>  <a href="reset">Registrieren</a></p>
-        <form method="post" action="/password">
-            <div class="form-group">
-                <input type="hidden" id="token" class="input" placeholder="Token" name="token" value="{{id}}" >
-            </div>
-            <div class="form-group">
-                <input type="password" id="password" class="input" placeholder="Passwort" name="password" required>
-            </div>
-                        <div class="form-group">
-                <input type="password" id="repeatpassword" class="input" placeholder="Passwort wiederholen" name="repeatpassword" required>
-            </div>
-            <button type="submit" class="b-login">Zurücksetzen</button>
-            <p>{{ error }}</p>
+    <canvas class="orb-canvas"></canvas>
+    <div class="overlay">
+        <form method="post" action="/password" id="register">
+        <div class="overlay__inner">
+        <!-- Title -->
+        <h1 class="overlay__title">
+          <span class="text-gradient">Success</span>!
+        </h1>
+        <!-- Description -->
+        <p class="overlay__description">
+            
+          <strong>The verification was successful. </strong> You can now enter a new password for your account.
+        </p>
+        <!-- Buttons -->
+        <div class="inputs">
+            <input type="hidden" id="token" class="input" placeholder="Token" name="token" value="{{id}}" >
+
+            <input type="password" id="password" placeholder="Passwort" class="input" name="password" required style="margin-bottom:0px;">
+                <div style="max-width: 300px;"><b id="meter"> </b>
+                    <p id="text" style="max-width: none !important;"> </p>
+                </div>
+            <input type="password" id="repeatpassword" placeholder="Passwort wiederholen" class="input" style="margin-top:1rem;"
+                    name="repeatpassword" required>
+        </div>
+        <div class="overlay__btns">
+          <button class="overlay__btn overlay__btn--transparent">
+            <a href="/login">
+              Or login?
+            </a>
+          </button>
+
+          <button class="overlay__btn overlay__btn--colors g-recaptcha" data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm" data-callback="onSubmit"  style="display:none;" id="submitit">
+            <span>Reset</span>
+            <span class="overlay__btn-emoji">🚀</span>
+          </button>
+          <button class="overlay__btn overlay__btn--transparent" id="passdialog">Choose a save Password...</button>
+        </div>
         </form>
-
-
+        {{#if error }}<p class="alert">{{ error }}</p>{{/if}}
+      </div>
     </div>
+
+
+    <script>
+        var strength = {
+            0: "Worst ☹",
+            1: "Bad ☹",
+            2: "Weak ☹",
+            3: "Good ☺",
+            4: "Strong ☻"
+        }
+
+        let now
+
+        var password = document.getElementById('password');
+        var repeatpassword = document.getElementById('repeatpassword');
+        var meter = document.getElementById('meter');
+        var text = document.getElementById('text');
+
+        repeatpassword.addEventListener('input', function () {
+            if (repeatpassword.value == password.value) {
+                if (now > 2) {
+                    document.getElementById('submitit').style.display = "block";
+                    document.getElementById('passdialog').style.display = "none";
+                } else {
+                    document.getElementById('submitit').style.display = "none";
+                    document.getElementById('passdialog').style.display = "block";
+                    document.getElementById('passdialog').innerText = "Choose a save Password";
+                }
+            } else {
+                document.getElementById('submitit').style.display = "none";
+                document.getElementById('passdialog').style.display = "block";
+                document.getElementById('passdialog').innerText = "The Passwords don't match";
+            }
+        });
+
+        password.addEventListener('input', function () {
+            var val = password.value;
+            var result = zxcvbn(val);
+
+            // Update the password strength meter
+            meter.value = result.score;
+            now = result.score;
+
+
+            // Update the text indicator
+            if (val !== "") {
+                text.innerHTML = "Strength: " + "<strong>" + strength[result.score] + " </strong>" + "<span class='feedback'>" + result.feedback.warning + " " + result.feedback.suggestions + "</span>";
+            }
+            else {
+                text.innerHTML = "";
+            }
+        });
+    </script>
+    <script type="module" src="/js/v2.js"></script>
 </body>
-<script src="/js/index.js"></script>
+
+
 
 </html>

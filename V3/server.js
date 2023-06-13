@@ -43,7 +43,7 @@ app.get('/', async (req, res) => {
         } catch (e) {
             res.clearCookie('auth');
             log("Signing error" + e)
-            return res.render('login.hbs', { error: "Setzen des Cookies nicht möglich" })
+            return res.render('login.hbs', { error: "Error while setting cookies" })
         }
     }
     if (logged !== true) {
@@ -124,14 +124,14 @@ app.get('/login', async (req, res) => {
 
 app.post('/login', async (req, res) => {
     if (!req.body?.username && !req.body?.password) {
-        return res.render('login.hbs', { error: "Bitte fülle alle Felder aus" })
+        return res.render('login.hbs', { error: "Please fill out all fields" })
     }
     if (!/^[0-9a-zA-Z-.@]+$/.test(req.body?.username)) {
-        return res.render('login.hbs', { error: "Email beinhaltet ungültige Zeichen" })
+        return res.render('login.hbs', { error: "E-Mail not valid" })
     }
     const user = await sql(`SELECT * FROM user WHERE email = "${req.body?.username}"`)
     if (user.results.length === 0) {
-        return res.render('login.hbs', { error: "Es existiert kein Benutzer mit dieser Email" })
+        return res.render('login.hbs', { error: "There is no user with that email" })
     }
     const match = await bcrypt.compare(req.body?.password, user.results[0].password)
 
@@ -141,7 +141,7 @@ app.post('/login', async (req, res) => {
         res.cookie('auth', token, { secure: true, overwrite: true });
         res.redirect('/')
     } else {
-        res.render('login.hbs', { error: "Passwort falsch" })
+        res.render('login.hbs', { error: "Wrong password" })
     }
 })
 
@@ -152,13 +152,13 @@ app.get('/register', async (req, res) => {
 app.post('/register', async (req, res) => {
 
     if (!req.body?.username && !req.body?.password && !req.body?.repeatpassword && !req.body?.name) {
-        return res.render('register.hbs', { error: "Bitte fülle alle Felder aus" })
+        return res.render('register.hbs', { error: "Please fill out all fields" })
     }
     if (!/^[0-9a-zA-Z-. @]+$/.test(req.body?.username) && !/^[0-9a-zA-Z-. ]+$/.test(req.body?.name)) {
-        return res.render('register.hbs', { error: "Name oder Email beinhalten ungültige Zeichen" })
+        return res.render('register.hbs', { error: "Name or E-Mail contains invalid characters" })
     }
     if (req.body?.password !== req.body?.repeatpassword) {
-        return res.render('register.hbs', { error: "Passwörter stimmen nicht überein" })
+        return res.render('register.hbs', { error: "The Passwords don't match" })
     }
 
     const result = await sql(`SELECT * FROM user WHERE email = "${req.body?.username}"`)
@@ -170,7 +170,7 @@ app.post('/register', async (req, res) => {
 
 
     } else {
-        return res.render('register.hbs', { error: "Benutzer existiert bereits" })
+        return res.render('register.hbs', { error: "This E-Mail already exists" })
     }
     res.redirect('/ok')
 })
@@ -183,18 +183,18 @@ app.post('/reset', async (req, res) => {
     const verify = uuid.v4()
     let user
     if (!req.body?.username) {
-        return res.render('reset.hbs', { error: "Bitte fülle alle Felder aus" })
+        return res.render('reset.hbs', { error: "Please fill out all fields" })
     }
     if (!/^[0-9a-zA-Z-.@]+$/.test(req.body?.username)) {
-        return res.render('reset.hbs', { error: "Email beinhaltet ungültige Zeichen" })
+        return res.render('reset.hbs', { error: "E-Mail contains invalid characters" })
     }
     user = await sql(`SELECT * FROM user WHERE email = "${req.body?.username}"`)
     if (user.results.length === 0) {
-        return res.render('reset.hbs', { error: "Es existiert kein Benutzer mit dieser Email" })
+        return res.render('reset.hbs', { error: "There is no user with that E-Mail" })
     }
     await sql(`UPDATE user SET passwordverify = "${verify}" WHERE email = "${req.body?.username}"`)
     await sendPass({ email: req.body?.username, verify, name: user.results[0].name })
-    return res.render('reset.hbs', { error: "Email erfolgreich versendet" })
+    return res.render('reset.hbs', { error: "E-Mail sent successfully" })
 })
 
 app.get('/password', async (req, res) => {
@@ -202,7 +202,7 @@ app.get('/password', async (req, res) => {
     log(verify)
     const user = await sql(`SELECT * FROM user WHERE passwordverify = "${verify}"`)
     if (user.results.length === 0) {
-        return res.render('reset.hbs', { error: "Ungültiger Link" })
+        return res.render('reset.hbs', { error: "Invalid URL" })
     } else {
         log(verify)
         return res.render('reset2.hbs', { id: verify })
@@ -212,21 +212,21 @@ app.get('/password', async (req, res) => {
 app.post('/password', async (req, res) => {
 
     if (!req.body?.token && !req.body?.password && !req.body?.repeatpassword) {
-        return res.render('reset.hbs', { error: "Bitte fülle alle Felder aus" })
+        return res.render('reset.hbs', { error: "Please fill out all fields" })
     }
     if (req.body?.password !== req.body?.repeatpassword) {
-        return res.render('reset.hbs', { error: "Passwörter stimmen nicht überein" })
+        return res.render('reset.hbs', { error: "Passwords don't match" })
     }
     log(req.body?.token)
     const result = await sql(`SELECT * FROM user WHERE passwordverify = "${req.body?.token}"`)
     log(result)
     if (result.results.length === 0) {
-        return res.render('reset.hbs', { error: "Link ungültig" })
+        return res.render('reset.hbs', { error: "Invalid URL" })
     } else {
         const hash = await bcrypt.hash(req.body?.password, 10)
 
         await sql(`UPDATE user SET password = "${hash}", passwordverify = NULL WHERE passwordverify = "${req.body?.token}"`)
-        return res.render('login.hbs', { error: "Passwort erfolgreich aktualisiert" })
+        return res.render('login.hbs', { error: "Password refreshed successfully" })
     }
 })
 
@@ -240,16 +240,16 @@ app.get('/verify', async (req, res) => {
     const verify = req.query.id
     const user = await sql(`SELECT * FROM user WHERE verify = "${verify}"`)
     if (user.results.length === 0) {
-        return res.render('login.hbs', { error: "Kein Benutzer gefunden" })
+        return res.render('login.hbs', { error: "No user found" })
     } else {
         await sql(`UPDATE user SET verify = NULL WHERE verify = "${verify}"`)
-        return res.render('login.hbs', { error: "Konto erfolgreich verifiziert" })
+        return res.render('login.hbs', { error: "Account successfully verified" })
     }
 })
 
 app.get('/logout', async (req, res) => {
     res.clearCookie('auth');
-    res.render('login.hbs', { error: "Erfolgreich ausgeloggt" })
+    res.render('login.hbs', { error: "Logged out successfully" })
 })
 
 app.post('/get', (req, res) => {
@@ -282,44 +282,45 @@ async function sql(query) {
     }
 }
 
-async function formatDateRelativeToNow(datum) {
-    const dann = new Date(datum);
-    log()
-    const jetzt = new Date((await sql(`SELECT NOW()`)).results[0]['now()']);
-    const differenzInSekunden = Math.floor((jetzt - dann) / 1000); // Differenz in Sekunden
-    log(differenzInSekunden)
-    if (differenzInSekunden < 5) {
-        return "Gerade eben";
-    } else if (differenzInSekunden < 60) {
-        return "Vor einigen Sekunden";
-    } else if (differenzInSekunden < 120) {
-        return "Vor einer Minute";
-    } else if (differenzInSekunden < 500) {
-        return "Vor einigen Minuten";
-    } else if (differenzInSekunden < 900) {
-        return "Vor einer viertel Stunde";
-    } else if (differenzInSekunden < 1800) {
-        return "Vor einer halben Stunde";
-    } else if (differenzInSekunden < 3600) {
-        return "Vor einer Stunde";
-    } else if (differenzInSekunden < 86400) {
-        return "Vor mehreren Stunden";
-    } else if (differenzInSekunden < 172800) {
-        return "Vor einem Tag";
-    } else if (differenzInSekunden < 604800) {
-        return "Vor mehreren Tagen";
-    } else if (differenzInSekunden < 1209600) {
-        return "Vor einer Woche";
-    } else if (differenzInSekunden < 2592000) {
-        return "Vor mehreren Wochen";
-    } else if (differenzInSekunden < 5184000) {
-        return "Vor einem Monat";
-    } else if (differenzInSekunden < 31536000) {
-        return "Vor mehreren Monaten";
+async function formatDateRelativeToNow(date) {
+    const then = new Date(date);
+    log();
+    const now = new Date((await sql(`SELECT NOW()`)).results[0]['now()']);
+    const differenceInSeconds = Math.floor((now - then) / 1000); // Difference in seconds
+    log(differenceInSeconds);
+    if (differenceInSeconds < 5) {
+        return "Just now";
+    } else if (differenceInSeconds < 60) {
+        return "A few seconds ago";
+    } else if (differenceInSeconds < 120) {
+        return "A minute ago";
+    } else if (differenceInSeconds < 500) {
+        return "A few minutes ago";
+    } else if (differenceInSeconds < 900) {
+        return "A quarter of an hour ago";
+    } else if (differenceInSeconds < 1800) {
+        return "Half an hour ago";
+    } else if (differenceInSeconds < 3600) {
+        return "An hour ago";
+    } else if (differenceInSeconds < 86400) {
+        return "Several hours ago";
+    } else if (differenceInSeconds < 172800) {
+        return "A day ago";
+    } else if (differenceInSeconds < 604800) {
+        return "Several days ago";
+    } else if (differenceInSeconds < 1209600) {
+        return "A week ago";
+    } else if (differenceInSeconds < 2592000) {
+        return "Several weeks ago";
+    } else if (differenceInSeconds < 5184000) {
+        return "A month ago";
+    } else if (differenceInSeconds < 31536000) {
+        return "Several months ago";
     } else {
-        return "Vor langer Zeit";
+        return "A long time ago";
     }
 }
+
 
 
 app.listen(5500, () => {
