@@ -214,6 +214,7 @@ a {
 @media only screen and (max-width: 600px) {
   .overlay {
     padding: 1.5rem;
+    width: 95%;
   }
 
   .overlay__btns {
