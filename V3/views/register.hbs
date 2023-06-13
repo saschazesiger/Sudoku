@@ -8,8 +8,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/zxcvbn/4.4.2/zxcvbn.js"
         integrity="sha512-TZlMGFY9xKj38t/5m2FzJ+RM/aD5alMHDe26p0mYUMoCF5G7ibfHUQILq0qQPV3wlsnCwL+TPRNK4vIWGLOkUQ=="
         crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
     <title>Sudoku</title>
+    <link rel="stylesheet" href="/css/v2.css"/>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
         function onSubmit(token) {
@@ -19,35 +19,52 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>Registrieren</h1>
-        <p>Stattdessen <a href="/" class="link">anmelden</a>?</p>
+    <canvas class="orb-canvas"></canvas>
+    <div class="overlay">
         <form method="post" action="/register" id="register">
-            <div class="form-group">
-                <input type="text" id="name" placeholder="Name" class="input" name="name" required>
-            </div>
-            <div class="form-group">
-                <input type="email" id="username" placeholder="Email" class="input" name="username" required>
-            </div>
-            <div class="form-group">
-                <input type="password" id="password" placeholder="Passwort" class="input" name="password" required>
-                <div style="max-width: 300px;"><b id="meter"> </b><br>
-                    <p id="text"> </p>
+        <div class="overlay__inner">
+        <!-- Title -->
+        <h1 class="overlay__title">
+          Let's play <span class="text-gradient">Sudoku</span>!
+        </h1>
+        <!-- Description -->
+        <p class="overlay__description">
+            
+          <strong>Sign Up </strong> to use our service. This means that you can play unlimited Sudoku puzzles at different difficulty levels and your progress will be saved.
+        </p>
+        <!-- Buttons -->
+        <div class="inputs">
+            <input type="text" id="name" placeholder="Name" class="input" name="name" required>
+            <input type="email" id="username" placeholder="Email" class="input" name="username" required >
+            <input type="password" id="password" placeholder="Passwort" class="input" name="password" required style="margin-bottom:0px;">
+                <div style="max-width: 300px;"><b id="meter"> </b>
+                    <p id="text" style="max-width: none !important;"> </p>
                 </div>
-            </div>
-            <div class="form-group">
-                <input type="password" id="repeatpassword" placeholder="Passwort wiederholen" class="input"
+            <input type="password" id="repeatpassword" placeholder="Passwort wiederholen" class="input" style="margin-top:1rem;"
                     name="repeatpassword" required>
-            </div>
+        </div>
+        <div class="overlay__btns">
+          <button class="overlay__btn overlay__btn--transparent">
+            <a href="/login">
+              Or login?
+            </a>
+          </button>
 
-            <button class="g-recaptcha b-login" id="submitit" data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm"
-                data-callback="onSubmit" style="display:none;">Registrieren 🎉</button>
-            <p id="passdialog">Wähle ein sicheres Passwort um fortzufahren</p>
-            <p>{{ error }}</p>
+          <button class="overlay__btn overlay__btn--colors g-recaptcha" data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm" data-callback="onSubmit"  style="display:none;" id="submitit">
+            <span>Register</span>
+            <span class="overlay__btn-emoji">🚀</span>
+          </button>
+          <button class="overlay__btn overlay__btn--transparent" id="passdialog">Choose a save Password...</button>
+        </div>
         </form>
-
-
+        {{#if error }}<p class="alert">{{ error }}</p>{{/if}}
+      </div>
     </div>
+<body>
+
+
+
+
     <script>
         var strength = {
             0: "Worst ☹",
@@ -72,12 +89,12 @@
                 } else {
                     document.getElementById('submitit').style.display = "none";
                     document.getElementById('passdialog').style.display = "block";
-                    document.getElementById('passdialog').innerText = "Wähle ein sicheres Passwort um fortzufahren";
+                    document.getElementById('passdialog').innerText = "Choose a save Password";
                 }
             } else {
                 document.getElementById('submitit').style.display = "none";
                 document.getElementById('passdialog').style.display = "block";
-                document.getElementById('passdialog').innerText = "Die Passwörter stimmen nicht überein";
+                document.getElementById('passdialog').innerText = "The Passwords don't match";
             }
         });
 
@@ -99,6 +116,7 @@
             }
         });
     </script>
+    <script type="module" src="/js/v2.js"></script>
 </body>
 
 </html>

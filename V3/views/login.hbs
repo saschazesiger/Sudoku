@@ -5,8 +5,10 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
-         <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+      <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="/css/v2.css"/>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
      <script>
        function onSubmit(token) {
          document.getElementById("login").submit();
@@ -16,22 +18,40 @@
 </head>
 
 <body>
-    <div class="container">
-        <h1>Login</h1>
-        <p><a href="register" class="link">Registrieren</a>  <a href="reset" class="link" style="margin-left:10px;">Passwort vegessen</a></p>
+    <canvas class="orb-canvas"></canvas>
+    <div class="overlay">
         <form  id="login" action="/login" method="POST">
-            <div class="form-group">
-                <input type="email" id="username" class="input" placeholder="Email" name="username" required>
-            </div>
-            <div class="form-group">
-                <input type="password" id="password" class="input" placeholder="Passwort" name="password" required>
-            </div>
-            <button class="g-recaptcha b-login" data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm" data-callback="onSubmit">Anmelden</button>
-            <p>{{ error }}</p>
+        <div class="overlay__inner">
+        <!-- Title -->
+        <h1 class="overlay__title">
+          Let's play <span class="text-gradient">Sudoku</span>!
+        </h1>
+        <!-- Description -->
+        <p class="overlay__description">
+            
+          <strong>Log in </strong> to use our service. This means that you can play unlimited Sudoku puzzles at different difficulty levels and your progress will be saved.
+        </p>
+        <!-- Buttons -->
+        <div class="inputs">
+            <input type="email" id="username" class="input" placeholder="Email" name="username" required>
+            <input type="password" id="password" class="input" placeholder="Passwort" name="password" required>
+        </div>
+        <div class="overlay__btns">
+          <button class="overlay__btn overlay__btn--transparent">
+            <a href="/register">
+              Or register?
+            </a>
+          </button>
+
+          <button class="overlay__btn overlay__btn--colors g-recaptcha" data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm" data-callback="onSubmit">
+            <span>Login</span>
+            <span class="overlay__btn-emoji">🚀</span>
+          </button>
+        </div>
         </form>
-
-
+        {{#if error }}<p class="alert">{{ error }}</p>{{/if}}
+      </div>
     </div>
 </body>
-
+<script type="module" src="/js/v2.js"></script>
 </html>

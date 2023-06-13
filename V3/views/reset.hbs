@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" href="/css/v2.css"/>
          <script src="https://www.google.com/recaptcha/api.js" async defer></script>
      <script>
        function onSubmit(token) {
@@ -15,20 +15,41 @@
     <title>Sudoku</title>
 </head>
 
+
+
 <body>
-    <div class="container">
-        <h1>Recovery</h1>
-        <p><a href="login" class="link">Login</a>  <a href="register" class="link" style="margin-left:10px;">Registrieren</a></p>
+    <canvas class="orb-canvas"></canvas>
+    <div class="overlay">
         <form method="post" action="/reset" id="reset">
-            <div class="form-group">
-                <input type="email" id="username" class="input" placeholder="Email" name="username" required>
-            </div>
-            <button class="g-recaptcha b-login" data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm" data-callback="onSubmit">Zurücksetzen</button>
-            <p>{{ error }}</p>
+        <div class="overlay__inner">
+        <h1 class="overlay__title">
+         Account <span class="text-gradient">Recovery</span>!
+        </h1>
+        <p class="overlay__description">
+            
+          Did you lost your Password? No Problem! Just enter your Email and we will send you a recovery link.
+        </p>
+        <div class="inputs">
+            <input type="email" id="username" class="input" placeholder="Email" name="username" required>   
+        </div>
+        <div class="overlay__btns">
+          <button class="overlay__btn overlay__btn--transparent">
+            <a href="/login">
+              Or login?
+            </a>
+          </button>
+
+          <button class="overlay__btn overlay__btn--colors g-recaptcha" data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm" data-callback="onSubmit">
+            <span>Reset Password</span>
+            <span class="overlay__btn-emoji">🚀</span>
+          </button>
+        </div>
         </form>
-
-
+        {{#if error }}<p class="alert">{{ error }}</p>{{/if}}
+      </div>
     </div>
-</body>
+    <script type="module" src="/js/v2.js"></script>
+<body>
+
 
 </html>
