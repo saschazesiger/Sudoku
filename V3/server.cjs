@@ -8,7 +8,7 @@ const mysql = require('mysql2');
 const uuid = require('uuid');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
-const { sendMail, sendPass } = require('./modules/email.js')
+const { sendMail, sendPass } = require('./modules/email.cjs')
 
 const log = msg => console.log(new Date(), msg);
 
