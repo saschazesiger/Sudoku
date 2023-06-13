@@ -114,6 +114,9 @@ app.get('/api', async (req, res) => {
     }
 });
 
+app.get('/v2', async (req, res) => {
+    res.render('v2.hbs')
+})
 
 app.get('/login', async (req, res) => {
     res.render('login.hbs')
@@ -319,6 +322,6 @@ async function formatDateRelativeToNow(datum) {
 }
 
 
-app.listen(5000, () => {
+app.listen(5500, () => {
     console.log('Listening...')
 })
