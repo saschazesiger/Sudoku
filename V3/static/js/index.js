@@ -35,9 +35,9 @@ bstart.onclick = function startbutton() {
 
     if (level === 4) {
         if (bstart.innerText === 'Start 🚀') {
-            bstart.innerText = 'Wähle ein Level';
-        } else if (bstart.innerText === 'Wähle ein Level') {
-            bstart.innerText = 'WÄHLE EIN LEVEL';
+            bstart.innerText = 'Choose a level';
+        } else if (bstart.innerText === 'Choose a Level') {
+            bstart.innerText = 'CHOOSE A LEVEL';
         } else {
             bstart.innerText = bstart.innerText + "!"
         };
