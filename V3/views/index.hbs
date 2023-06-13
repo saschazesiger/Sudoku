@@ -5,41 +5,46 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/v2.css"/>
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-
+    
     <title>Sudoku</title>
 </head>
 
 <body>
-    <div class="container">
-        <h1>SUDOKU</h1>
+    <canvas class="orb-canvas"></canvas>
+    <div class="overlay" style="width:auto !important;padding: 2rem 3rem !important;">
+        <div class="overlay__description" style="text-align: center;">
+        <h1 class="overlay__title" style="margin-bottom: 0px !important;">
+          Hi <span class="text-gradient">{{user}}</span>!
+        </h1>
+        <a href="/logout" style="margin-bottom:1rem;">Log Out</a>
         {{#if create}}
         <div id="d-difficulty">
             <input type="radio" class="difficulty" name="difficulty" value="0" id="d-0" hidden><label
-                class="difficulty-label" for="d-0">Einfach</label>
+                class="difficulty-label" for="d-0">Easy</label>
             <input type="radio" class="difficulty" name="difficulty" value="1" id="d-1" hidden><label
-                class="difficulty-label" for="d-1">Mittel</label>
+                class="difficulty-label" for="d-1">Medium</label>
             <input type="radio" class="difficulty" name="difficulty" value="2" id="d-2" hidden><label
-                class="difficulty-label" for="d-2">Schwer</label>
+                class="difficulty-label" for="d-2">Hard</label>
             <input type="radio" class="difficulty" name="difficulty" value="3" id="d-3" hidden><label
-                class="difficulty-label" for="d-3">Extrem</label>
+                class="difficulty-label" for="d-3">Extreme</label>
         </div>
-        <button type="button" id="b-login" class="b-login">Start 🚀</button>
+        <button type="button" id="b-login" class="overlay__btn overlay__btn--colors" style="width:100%;">Start 🚀</button>
         {{else}}
-            <div id="b-login" class="b-login" style="display:none;"></div>
             <div id="d-difficulty" style="display:none;"></div>
-            <p >Lösche ein Sudoku um weitere zu erstellen</p>
+            <p id="b-login" class="b-login">Delete a sudoku to create another one</p>
         {{/if}}
         <div id="history">
-        <p >Weiterspielen:</p>
+        {{#if sudokus}}<p style="text-align: center;margin-top:2rem;">Continue playing:</p>{{/if}}
         {{#each sudokus}}
-        <div class="sudokus"><br><div style="margin-right:10px">Erstellt:&nbsp;<b> {{this.created}} </b>&nbsp;Bearbeitet:&nbsp;<b> {{this.updated}} </b></div><br><div style="display:flex;flex-direction:row;justify-content:center;"><a href="/api?reason=delete&id={{this.id}}" class="b-start">❌</a><button onclick="startExisting('{{this.progress}}','{{this.solution}}')" class="b-start">▶️</button></div></div>
+        <div class="sudokus" style="border-style:solid;border-width:2px;border-color:black;"><br><div style="margin-right:10px">Created:&nbsp;<b> {{this.created}} </b>&nbsp;Edited:&nbsp;<b> {{this.updated}} </b></div><br><div style="display:flex;flex-direction:row;justify-content:center;"><button onclick="location.replace('/api?reason=delete&id={{this.id}}')" class="overlay__btn overlay__btn--transparent">❌ Delete</button><button onclick="startExisting('{{this.progress}}','{{this.solution}}')" class="overlay__btn overlay__btn--colors">▶️ Continue</button></div></div>
         {{/each}}
         </div>
         <div id="b-loader" class="buttonloader" title="7" hidden>
             <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="18px" height="20px"
-                viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve">
+                viewBox="0 0 24 30" style="enable-background:new 0 0 50 50;" xml:space="preserve" style="margin-left:auto;margin-right:auto;">
                 <rect x="0" y="10" width="4" height="10" fill="#777" opacity="0.2">
                     <animate attributeName="opacity" attributeType="XML" values="0.2; 1; .2" begin="0s" dur="0.6s"
                         repeatCount="indefinite" />
@@ -231,14 +236,15 @@
                     </div>
                 </div>
             </div><br>
-            <a href="/">⬅️ Zurück </a>
+            <a href="/">⬅️ Go Back </a>
             <div id="icon" class="icon">💤</div>
         </div>
-        <p>Nicht {{user}}? <a href="/logout">Ausloggen</a></p>
+        </div>
     </div>
     
     
 </body>
 <script src="/js/index.js"></script>
+<script type="module" src="/js/v2.js"></script>
 
 </html>
