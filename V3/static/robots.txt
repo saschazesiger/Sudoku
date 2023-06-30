@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://sudoku.tinyweb.net/sitemap.xml
