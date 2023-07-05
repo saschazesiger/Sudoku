@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, 'static')))
 const { OAuth2 } = google.auth;
 const oauth2Client = new OAuth2(process.env.google_client, process.env.google_key, "https://" + process.env.url + '/user/callback');
 
-router.get('/google', (req, res) => {
+app.get('/google', (req, res) => {
     const url = oauth2Client.generateAuthUrl({
         access_type: 'offline',
         scope: [
@@ -272,7 +272,7 @@ app.post('/get', (req, res) => {
     res.send(sudoku)
 });
 
-router.get('/callback', getUser, async (req, res) => {
+app.get('/callback', getUser, async (req, res) => {
     let link = {}
     link.plan = []
     let existinguser
