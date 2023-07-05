@@ -9,6 +9,7 @@ const uuid = require('uuid');
 const bcrypt = require('bcrypt');
 require('dotenv').config();
 const { sendMail, sendPass } = require('./modules/email.cjs')
+const { google } = require('googleapis');
 
 const log = msg => console.log(new Date(), msg);
 
@@ -21,6 +22,19 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'static')))
 
+const { OAuth2 } = google.auth;
+const oauth2Client = new OAuth2(process.env.google_client, process.env.google_key, "https://" + process.env.url + '/user/callback');
+
+router.get('/google', (req, res) => {
+    const url = oauth2Client.generateAuthUrl({
+        access_type: 'offline',
+        scope: [
+            'https://www.googleapis.com/auth/userinfo.email',
+            'https://www.googleapis.com/auth/userinfo.profile'
+        ],
+    });
+    res.redirect(url);
+});
 
 app.get('/', async (req, res) => {
     let logged = false
@@ -256,6 +270,23 @@ app.post('/get', (req, res) => {
     const puzzle = generator(2);
     const sudoku = new Sudoku(puzzle, true)
     res.send(sudoku)
+});
+
+router.get('/callback', getUser, async (req, res) => {
+    let link = {}
+    link.plan = []
+    let existinguser
+    try {
+        const { code } = req.query;
+        const { tokens } = await oauth2Client.getToken(code);
+        oauth2Client.setCredentials(tokens);
+        const userInfo = await google.oauth2('v2').userinfo.get({ auth: oauth2Client });
+        return res.json(userInfo.data);
+    } catch (e) {
+        log(e)
+        link.message = { category: 'error', text: "We are experiencing a high volume of users at the moment... Please try again later" }
+        return res.json(link.message);
+    }
 });
 
 
