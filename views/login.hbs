@@ -2,39 +2,40 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet"/>
-    <link rel="stylesheet" href="/css/v2.css"/>
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-     <script>
-       function onSubmit(token) {
-         document.getElementById("login").submit();
-       }
-     </script>
-    <title>Sudoku</title>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.gstatic.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/v2.css" />
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+  <script>
+    function onSubmit(token) {
+      document.getElementById("login").submit();
+    }
+  </script>
+  <title>Sudoku</title>
 </head>
 
 <body>
-    <canvas class="orb-canvas"></canvas>
-    <div class="overlay">
-        <form  id="login" action="/login" method="POST">
-        <div class="overlay__inner">
+  <canvas class="orb-canvas"></canvas>
+  <div class="overlay">
+    <form id="login" action="/login" method="POST">
+      <div class="overlay__inner">
         <!-- Title -->
         <h1 class="overlay__title">
           Let's play <span class="text-gradient">Sudoku</span>!
         </h1>
         <!-- Description -->
         <p class="overlay__description">
-            
-          <strong>Log in </strong> to use our service. This means that you can play unlimited Sudoku puzzles at different difficulty levels and your progress will be saved.
+
+          <strong>Log in </strong> to use our service. This means that you can play unlimited Sudoku puzzles at
+          different difficulty levels and your progress will be saved.
         </p>
         <!-- Buttons -->
         <div class="inputs">
-            <input type="email" id="username" class="input" placeholder="E-Mail" name="username" required>
-            <input type="password" id="password" class="input" placeholder="Password" name="password" required>
+          <input type="email" id="username" class="input" placeholder="E-Mail" name="username" required>
+          <input type="password" id="password" class="input" placeholder="Password" name="password" required>
         </div>
         <div class="overlay__btns">
           <button class="overlay__btn overlay__btn--transparent">
@@ -43,22 +44,34 @@
             </a>
           </button>
 
-          <button class="overlay__btn overlay__btn--colors g-recaptcha" data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm" data-callback="onSubmit">
+          <button class="overlay__btn overlay__btn--colors g-recaptcha"
+            data-sitekey="6LePhWEmAAAAAF9GAaT6JxXBLamGDmlRCyLP8GFm" data-callback="onSubmit">
             <span>Login</span>
             <span class="overlay__btn-emoji">🚀</span>
           </button>
         </div>
-          <button class="overlay__btn overlay__btn--transparent" style="width: 100%;margin-top:20px;">
-            <a href="/google">
-              Login with Google
-            </a>
-          </button>
-        </form>
-        <a href="/reset" class="reset" style="margin-top:10px">Forgot Password?</a>
-        {{#if error }}<p class="alert">{{ error }}</p>{{/if}}
-      </div>
-      
-    </div>
+        <a class="auth-provider google-login" href="/google" style="margin-top: 20px;">
+          <svg aria-hidden="true" class="svg-icon" width="18" height="18" viewBox="0 0 18 18">
+            <g>
+              <path
+                d="M16.51 8H8.98v3h4.3c-.18 1-.74 1.48-1.6 2.04v2.01h2.6a7.8 7.8 0 0 0 2.38-5.88c0-.57-.05-.66-.15-1.18z"
+                fill="#4285F4"></path>
+              <path d="M8.98 17c2.16 0 3.97-.72 5.3-1.94l-2.6-2a4.8 4.8 0 0 1-7.18-2.54H1.83v2.07A8 8 0 0 0 8.98 17z"
+                fill="#34A853"></path>
+              <path d="M4.5 10.52a4.8 4.8 0 0 1 0-3.04V5.41H1.83a8 8 0 0 0 0 7.18l2.67-2.07z" fill="#FBBC05"></path>
+              <path d="M8.98 4.18c1.17 0 2.23.4 3.06 1.2l2.3-2.3A8 8 0 0 0 1.83 5.4L4.5 7.49a4.77 4.77 0 0 1 4.48-3.3z"
+                fill="#EA4335"></path>
+            </g>
+          </svg>
+          Log in with Google
+        </a>
+    </form>
+    <a href="/reset" class="reset" style="margin-top:10px">Forgot Password?</a>
+    {{#if error }}<p class="alert">{{ error }}</p>{{/if}}
+  </div>
+
+  </div>
 </body>
 <script type="module" src="/js/v2.js"></script>
+
 </html>
