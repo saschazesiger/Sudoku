@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, 'static')))
 
 const { OAuth2 } = google.auth;
-const oauth2Client = new OAuth2(process.env.google_client, process.env.google_key, "https://" + process.env.url + '/user/callback');
+const oauth2Client = new OAuth2(process.env.google_client, process.env.google_key, "https://" + process.env.url + '/callback');
 
 app.get('/google', (req, res) => {
     const url = oauth2Client.generateAuthUrl({
@@ -278,11 +278,14 @@ app.get('/callback', async (req, res) => {
         const { tokens } = await oauth2Client.getToken(code);
         oauth2Client.setCredentials(tokens);
         const userInfo = await google.oauth2('v2').userinfo.get({ auth: oauth2Client });
-        return res.json(userInfo.data);
+        await sql(`INSERT IGNORE INTO user (email, password, verify, name) VALUES ("${userInfo.data.email}",NULL,NULL,"${userInfo.data.name}")`)
+        const token = jwt.sign({ id: userInfo.data.email }, process.env.express_secret)
+        res.cookie('auth', token, { secure: true, overwrite: true });
+        res.redirect('/')
     } catch (e) {
         log(e)
-        link.message = { category: 'error', text: "We are experiencing a high volume of users at the moment... Please try again later" }
-        return res.json(link.message);
+        const message = { category: 'error', text: "We are experiencing a high volume of users at the moment... Please try again later" }
+        return res.json(message);
     }
 });
 
@@ -351,6 +354,6 @@ async function formatDateRelativeToNow(date) {
 
 
 
-app.listen(5500, () => {
+app.listen(5000, () => {
     console.log('Listening...')
 })
