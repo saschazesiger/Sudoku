@@ -272,10 +272,7 @@ app.post('/get', (req, res) => {
     res.send(sudoku)
 });
 
-app.get('/callback', getUser, async (req, res) => {
-    let link = {}
-    link.plan = []
-    let existinguser
+app.get('/callback', async (req, res) => {
     try {
         const { code } = req.query;
         const { tokens } = await oauth2Client.getToken(code);
