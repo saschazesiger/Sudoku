@@ -2,22 +2,19 @@ const nodemailer = require('nodemailer');
 
 async function sendMail(user) {
     return new Promise((resolve, reject) => {
-        // SMTP-Konfiguration
         const transporter = nodemailer.createTransport({
-            host: 'smtp.mail.ch', // Hier den SMTP-Server deines E-Mail-Anbieters eintragen
+            host: 'smtp.mail.ch', 
             port: 587,
-            secure: false, // Setze auf "true", wenn du eine SSL-Verbindung verwenden möchtest
+            secure: false, 
             auth: {
-                user: 'no-scam-login@mail.ch', // Hier deine E-Mail-Adresse eintragen
-                pass: process.env.smtp_password // Hier dein E-Mail-Passwort eintragen
+                user: 'no-scam-login@mail.ch', 
+                pass: process.env.smtp_password 
             }
         });
-
-        // E-Mail-Optionen
         const mailOptions = {
-            from: 'no-scam-login@mail.ch', // Absender
-            to: user.email, // Empfänger
-            subject: 'Verifiziere deine Email', // Betreff
+            from: 'no-scam-login@mail.ch', 
+            to: user.email, 
+            subject: 'Verifiziere deine Email',
             text: `Hi ${user.name}\n\nKlicke auf den Link unterhalb um deine Email zu verifizieren:\nhttps://${process.env.url}/verify?id=${user.verify}` // Textinhalt
         };
 
